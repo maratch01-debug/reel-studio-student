@@ -1,0 +1,110 @@
+ИНСТРУМЕНТЫ REEL STUDIO
+
+Все команды запускаются из клонированного репозитория. В macOS используйте python3.
+Готовые форматы перечисляет python studio.py init --help.
+
+Сборка из сообщения
+   python studio.py produce brief.json
+   Агент создаёт brief.json с полями id, format и scenes.
+   id — уникальное имя из строчных латинских букв, цифр и дефисов.
+   character для первых двух форматов — panther, tigress, wolf или путь
+   к папке собственных PNG.
+   Обязательное поле сцены: say — произносимая реплика.
+   caption — короткая подпись. cues — точные тайминги, если они есть.
+   diagram.steps — от одного до трёх коротких этапов.
+   diagram.value + diagram.label — подпись и число, например «3 этапа».
+   diagram.color — plum, amber или blue.
+   art — готовая картинка. В белом фоне и комиксе схема заменяет картинку.
+   В talk поле art задаёт полный кадр с героем внутри сцены.
+   imagePrompt — описание иллюстрации для локального Flux, запустите
+   produce с --comfy "<корень ComfyUI>". Для схем этот шаг пропустите.
+   audio — готовый звук отдельной сцены.
+   voice.profile — точное имя или ID локального профиля Voicebox.
+   voice.preset — пресет Qwen. voice.instruct — указание по подаче.
+   music — "studio" для комплектного инструментала, false для тишины
+   или путь к своей дорожке. musicVolume задаёт уровень музыки.
+   Пути к своим исходникам считаются от brief.json. Форма для пачки:
+   {"reels":[{...},{...}]}. См. примеры в examples/student-demo.json.
+   Результат каждого ролика в output/<id>/result.mp4. Рядом project.json,
+   исходники и сохранённый план. Повтор той же команды использует кэш,
+   а изменённому ролику нужно задать новый id.
+
+1. Форматы
+   1. white-background — говорящий герой, предметы и подписи на чистом белом.
+   2. comic — иллюстрации в панелях и герой с речевыми облачками.
+   3. talk — говорящий герой внутри движущейся сцены. Склейки идут по сценам,
+      субтитры белые с жёлтым акцентом.
+   Quickstart собирает готовые примеры в таком порядке.
+
+   Для новых сцен talk задайте art, say или готовый audio и prompt действия.
+   Полный кадр art должен содержать самого героя, локацию и предметы.
+   В prompt опишите речь в такт аудио, жест героя и движение в окружении
+   в течение кадра. Используйте один образ героя во всех сценах. Для Flux
+   задайте imagePrompt, а в imageReference укажите путь к референсу героя.
+   Запуск генерации: python studio.py produce brief.json --comfy "<корень ComfyUI>".
+   Учебный план от кадра до видео есть в examples/live-demo.json.
+   Если сцена уже анимирована, укажите video. Клип со звуком сохраняет
+   свой звук, если audio не указан.
+
+2. Графика и монтаж
+   Сцена graphic принимает graphic.variant (title, cards, bars, timeline),
+   title, body, eyebrow, palette (mint, blue, sunset), icon и до пяти items.
+   У строки items: label, detail, icon, mark, value (процент для bars).
+   Иконки: spark, target, clock, chart, layers, check, camera, bolt,
+   chat, arrow, play, image, audio, globe, book, link. Все рисуются SVG.
+   Пример плашки: "badge": {"icon":"check","text":"Готово","start":0.5}
+   Своя наклейка: "sticker": "assets/transparent.png".
+   Движение изображения или клипа: "motion": "push", "pull", "pan" или "none".
+   Переходы и стили подписей задаются в проекте, см. START.txt.
+
+3. Персонаж из своих картинок
+   Любую сцену можно собрать как "kind": "sprite", "media": "idle.png",
+   "mouths": ["open-a.png","open-b.png"], "voice": "line.wav".
+   Используйте одинаковые холсты с совпадающим положением персонажа.
+   "background" задаёт цвет фона. При наличии cues рот меняется внутри
+   речевых отрезков. Без таймингов он меняется на протяжении озвучки.
+   Это простая анимация сменой рисунков. Для движения головы, рук и губ
+   с видеомоделью используйте kind ltx.
+   Для белого фона и комикса укажите layout и art. У comic можно задать
+   номер панели через panel. Героя для формата 3 рисуют внутри art каждой
+   сцены и оживляют через LTX от той же реплики, которая звучит в ролике.
+   Для неподвижной мордочки задайте "lockHead": true. На белом фоне
+   иллюстрация и персонаж располагаются в своих областях с зазором.
+
+4. Подготовка картинок
+   python provision.py models --set image --comfy "<корень ComfyUI>"
+   Добавьте --download для установки 7,59 ГБ весов Flux.2 Klein 4B.
+   python media_tools.py image character.png --prompt "A cartoon turtle with a blue backpack"
+   python media_tools.py image pose.png --reference character.png --comfy "<корень ComfyUI>" --prompt "Keep the same character and raise one hand"
+   Для GGUF нужен официальный модуль https://github.com/city96/ComfyUI-GGUF
+   Устанавливайте его в ComfyUI по инструкции проекта. Подробности в SETUP.txt.
+   Однотонный фон можно удалить в прозрачный PNG:
+   python media_tools.py cutout image.png sticker.png --color ffffff
+
+5. Субтитры и звук
+   Установите зависимости в виртуальное окружение Python:
+   python -m venv .venv
+   Windows: .venv\Scripts\python.exe -m pip install -r requirements-captions.txt
+   macOS: .venv/bin/python -m pip install -r requirements-captions.txt
+   python media_tools.py captions line.wav words.json --language ru --words 3
+   Команду captions запускайте тем же Python из .venv.
+   Whisper загружает выбранную модель при первом использовании. Команда
+   использует CPU. "captionsFile": "words.json" подключает тайминги к сцене.
+   Можно записать "cues": [{"start":0.2,"end":1.1,"text":"Моя подпись"}].
+   Тайминги указываются в секундах относительно начала текущей сцены.
+   python media_tools.py sound chime chime.wav
+   Также доступны pop и swoosh. Подключение к сцене:
+   "sound": "chime.wav", "soundAt": 0.4. Музыка проекта задаётся полем music.
+   "musicVolume": 0.22 задаёт её громкость относительно исходного файла.
+   Допустимый диапазон от 0 до 1. По умолчанию 0.12.
+
+6. Плавность видео
+   python media_tools.py smooth clip.mp4 smooth.mp4 --fps 30
+   По умолчанию используется интерполяция FFmpeg. Можно указать исполняемый
+   файл RIFE и папку весов через --rife и --rife-model. Проект RIFE:
+   https://github.com/nihui/rife-ncnn-vulkan
+   Сначала прогоните короткий клип на своём оборудовании. Итоговый монтаж
+   Reel Studio экспортируется в 30 fps даже при входном клипе в 60 fps.
+
+Движки и веса ставятся отдельно по инструкциям. В пакет входят код,
+собственные SVG, универсальные шаблоны и настройки загрузки моделей.

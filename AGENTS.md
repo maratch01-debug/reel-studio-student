@@ -1,0 +1,13 @@
+# Reel Studio
+
+This folder is the student's local production project. Read START.txt, SETUP.txt and TOOLS.txt on first use. The student talks to the coding agent, which runs the tools locally.
+
+If the student provides the installation prompt or asks to set up this project, use the open repository at https://github.com/maratch01-debug/reel-studio-student. Reuse the current clone if it is already open. Execute the OS installer with the demo flag and verify the three generated MP4s and their project.json files before reporting completion.
+
+1. Treat a request like “Сделай рилс с тигрицей про прокат настольных игр” as a production request. Write a brief JSON yourself and execute studio.py produce. See TOOLS.txt and examples/student-demo.json for the format. Return the MP4 and the editable project.
+2. Teach the three formats in order: white-background (a pure white canvas), comic (comic panels and speech bubbles), talk (a full-scene character animated from the narration). Follow the student's chosen format.
+3. For the first two formats use the requested bundled character or a folder with matching transparent idle.png, mouth-small.png and mouth-open.png. Inspect alignment and reuse matching poses in future episodes. For talk use the same character reference across full-scene keyframes. Give each scene one clear gesture or action and visible environmental motion, such as falling drops, moving tools, or a drifting object. Use the scene narration as LTX audio input and keep framing stable enough to read the action. Replaceable student inputs include character, narration, and music.
+4. Write a clear Russian script by default with a hook, a short progression and a payoff. Use supplied or verified figures or clearly labeled examples. Keep captions short. Use supplied artwork or prefer the local Flux.2 Klein 4B when available. Keep optional local services on loopback.
+5. Check the base tools in SETUP.txt. The produce command installs pinned Remotion dependencies when needed. For original narration, use the student's WAVs or the local Voicebox service. Reuse an existing student profile when named. Preset voices are available for a first pass. The words in the demo WAVs belong to the demo.
+6. For several topics, write one reels array with distinct IDs and run produce once. Render sequentially and keep completed outputs and cached files. Verify the runtimes, framing, captions and presence of sound before returning links.
+7. Use private assets and outputs only in the student's own workspace. Reels are rendered locally. Publishing or sharing is a separate user request.

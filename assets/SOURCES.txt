@@ -1,0 +1,3 @@
+studio-bed.m4a — инструментальная музыка, созданная для этого комплекта
+локально через ACE-Step 1.5 Turbo. Seed 11689, 110 BPM, F minor.
+Модель, загрузка и лицензия: https://huggingface.co/ACE-Step/Ace-Step1.5

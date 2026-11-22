@@ -1,0 +1,203 @@
+{
+  "reels": [
+    {
+      "id": "first-white-background",
+      "format": "white-background",
+      "character": "panther",
+      "musicVolume": 0.17,
+      "scenes": [
+        {
+          "say": "Бизнесы, которые не выглядят прибыльными, но приносят кучу денег. Эва-коврики для машин.",
+          "audio": "first-reel/assets/narration-studio.wav",
+          "diagram": {
+            "value": "ЭВА-коврики",
+            "label": "Под конкретную машину",
+            "color": "amber"
+          },
+          "cues": [
+            {
+              "start": 0,
+              "end": 1.32,
+              "text": "Бизнесы, которые"
+            },
+            {
+              "start": 1.32,
+              "end": 3.14,
+              "text": "не выглядят прибыльными,"
+            },
+            {
+              "start": 3.14,
+              "end": 4.6,
+              "text": "но приносят кучу денег."
+            },
+            {
+              "start": 4.6,
+              "end": 6.84,
+              "text": "ЭВА-коврики для машин."
+            }
+          ]
+        },
+        {
+          "say": "В гараже вырезаешь коврик по лекалу. А в машине ячейки удерживают воду с обуви.",
+          "audio": "first-reel/assets/narration-workbench.wav",
+          "diagram": {
+            "steps": [
+              "Снять форму",
+              "Вырезать по лекалу",
+              "Проверить посадку"
+            ],
+            "color": "amber"
+          },
+          "cues": [
+            {
+              "start": 0,
+              "end": 0.64,
+              "text": "В гараже"
+            },
+            {
+              "start": 0.64,
+              "end": 3.0,
+              "text": "вырезаешь коврик по лекалу."
+            },
+            {
+              "start": 3.0,
+              "end": 4.28,
+              "text": "А в машине ячейки"
+            },
+            {
+              "start": 4.28,
+              "end": 6.25,
+              "text": "удерживают воду с обуви."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "first-comic",
+      "format": "comic",
+      "character": "panther",
+      "musicVolume": 0.17,
+      "scenes": [
+        {
+          "say": "Бизнесы, которые не выглядят прибыльными, но приносят кучу денег. Эва-коврики для машин.",
+          "audio": "first-reel/assets/narration-studio.wav",
+          "art": "first-reel/assets/panther-studio.png",
+          "panel": 1,
+          "cues": [
+            {
+              "start": 0,
+              "end": 1.32,
+              "text": "Бизнесы, которые"
+            },
+            {
+              "start": 1.32,
+              "end": 3.14,
+              "text": "не выглядят прибыльными,"
+            },
+            {
+              "start": 3.14,
+              "end": 4.6,
+              "text": "но приносят кучу денег."
+            },
+            {
+              "start": 4.6,
+              "end": 6.84,
+              "text": "ЭВА-коврики для машин."
+            }
+          ]
+        },
+        {
+          "say": "В гараже вырезаешь коврик по лекалу. А в машине ячейки удерживают воду с обуви.",
+          "audio": "first-reel/assets/narration-workbench.wav",
+          "art": "first-reel/assets/panther-workbench.png",
+          "panel": 2,
+          "cues": [
+            {
+              "start": 0,
+              "end": 0.64,
+              "text": "В гараже"
+            },
+            {
+              "start": 0.64,
+              "end": 3.0,
+              "text": "вырезаешь коврик по лекалу."
+            },
+            {
+              "start": 3.0,
+              "end": 4.28,
+              "text": "А в машине ячейки"
+            },
+            {
+              "start": 4.28,
+              "end": 6.25,
+              "text": "удерживают воду с обуви."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "first-talk",
+      "format": "talk",
+      "character": "panther",
+      "musicVolume": 0.17,
+      "scenes": [
+        {
+          "say": "Бизнесы, которые не выглядят прибыльными, но приносят кучу денег. Эва-коврики для машин.",
+          "audio": "first-reel/assets/narration-studio.wav",
+          "video": "first-reel/assets/scene-studio.mp4",
+          "cues": [
+            {
+              "start": 0,
+              "end": 1.32,
+              "text": "Бизнесы, которые"
+            },
+            {
+              "start": 1.32,
+              "end": 3.14,
+              "text": "не выглядят прибыльными,"
+            },
+            {
+              "start": 3.14,
+              "end": 4.6,
+              "text": "но приносят кучу денег."
+            },
+            {
+              "start": 4.6,
+              "end": 6.84,
+              "text": "ЭВА-коврики для машин."
+            }
+          ]
+        },
+        {
+          "say": "В гараже вырезаешь коврик по лекалу. А в машине ячейки удерживают воду с обуви.",
+          "audio": "first-reel/assets/narration-workbench.wav",
+          "video": "first-reel/assets/scene-workbench.mp4",
+          "cues": [
+            {
+              "start": 0,
+              "end": 0.64,
+              "text": "В гараже"
+            },
+            {
+              "start": 0.64,
+              "end": 3.0,
+              "text": "вырезаешь коврик по лекалу."
+            },
+            {
+              "start": 3.0,
+              "end": 4.28,
+              "text": "А в машине ячейки"
+            },
+            {
+              "start": 4.28,
+              "end": 6.25,
+              "text": "удерживают воду с обуви."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

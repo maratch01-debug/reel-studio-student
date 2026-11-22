@@ -1,0 +1,25 @@
+{
+  "windows": {
+    "python": "Python.Python.3.12",
+    "node": "OpenJS.NodeJS.LTS",
+    "ffmpeg": "Gyan.FFmpeg"
+  },
+  "macos": {
+    "node": "node",
+    "ffmpeg": "ffmpeg"
+  },
+  "voicebox": {
+    "source": "https://github.com/jamiepine/voicebox/releases/download/v0.6.0/",
+    "Windows-amd64": ["Voicebox_0.6.0_x64_en-US.msi", "4d97cd976671c6f321c115b55d90bfe6aa6dd049bc9fb1c1c20361eb710453bd"],
+    "Darwin-arm64": ["Voicebox_0.6.0_aarch64.dmg", "b1873c5794ea68ba52803a74a177674612806577c4811bc95395b5ba71e94c84"],
+    "Darwin-x86_64": ["Voicebox_0.6.0_x64.dmg", "2b73291b5ada60a774c2ad6234a9e08bd30a1398ab40a5699722ac5b1c320c79"]
+  },
+  "comfyui": {
+    "repository": "https://github.com/Comfy-Org/ComfyUI",
+    "windowsReferenceRevision": "bb131be9e83d2f773c90f1d6f1e4b248a498c8c5",
+    "ggufRepository": "https://github.com/city96/ComfyUI-GGUF",
+    "ggufReferenceRevision": "73439d2120c2e465fbdf7eb9e98c17ef592e5da3",
+    "modelManifest": "provision.py"
+  },
+  "remotion": "remotion/package-lock.json"
+}

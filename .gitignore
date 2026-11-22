@@ -1,0 +1,15 @@
+__pycache__/
+*.mp4
+out/
+node_modules/
+.venv/
+2d-output/
+output/
+.remotion/
+.downloads/
+*.wav
+*.m4a
+!examples/2d-demo/assets/line-*.wav
+!examples/first-reel/assets/narration-*.wav
+!examples/first-reel/assets/scene-*.mp4
+!assets/studio-bed.m4a

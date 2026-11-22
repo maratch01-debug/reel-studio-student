@@ -1,0 +1,60 @@
+{
+  "music": "assets/studio-bed.m4a",
+  "musicVolume": 0.17,
+  "transition": "cut",
+  "captionStyle": "talk",
+  "scenes": [
+    {
+      "kind": "video",
+      "media": "assets/scene-studio.mp4",
+      "cues": [
+        {
+          "start": 0,
+          "end": 1.32,
+          "text": "Бизнесы, которые"
+        },
+        {
+          "start": 1.32,
+          "end": 3.14,
+          "text": "не выглядят прибыльными,"
+        },
+        {
+          "start": 3.14,
+          "end": 4.6,
+          "text": "но приносят кучу денег."
+        },
+        {
+          "start": 4.6,
+          "end": 6.84,
+          "text": "ЭВА-коврики для машин."
+        }
+      ]
+    },
+    {
+      "kind": "video",
+      "media": "assets/scene-workbench.mp4",
+      "cues": [
+        {
+          "start": 0,
+          "end": 0.64,
+          "text": "В гараже"
+        },
+        {
+          "start": 0.64,
+          "end": 3.0,
+          "text": "вырезаешь коврик по лекалу."
+        },
+        {
+          "start": 3.0,
+          "end": 4.28,
+          "text": "А в машине ячейки"
+        },
+        {
+          "start": 4.28,
+          "end": 6.25,
+          "text": "удерживают воду с обуви."
+        }
+      ]
+    }
+  ]
+}
