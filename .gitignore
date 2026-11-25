@@ -16,3 +16,5 @@ output/
 !assets/pulse-bed.m4a
 !assets/point.m4a
 !assets/voices/*-reference.wav
+/.mcp.json
+/.codex/config.toml

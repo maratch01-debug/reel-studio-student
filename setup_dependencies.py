@@ -6,10 +6,12 @@ import os
 import platform
 import shutil
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
 from studio import ROOT, install_remotion, quickstart
+from mcp_setup import configure_mcp
 
 
 def node_ready():
@@ -66,7 +68,12 @@ def main():
     if not node_ready():
         raise RuntimeError('Нужен Node.js 22+ в PATH. Перезапустите терминал после установки.')
     install_remotion()
-    print('FFmpeg и Remotion готовы.', flush=True)
+    npm = shutil.which('npm.cmd' if os.name == 'nt' else 'npm')
+    if not npm:
+        raise RuntimeError('Для локального Reel Studio MCP нужен npm из комплекта Node.js.')
+    subprocess.run([npm, 'ci', '--no-audit', '--no-fund'], cwd=ROOT / 'mcp', check=True)
+    configure_mcp(ROOT, shutil.which('node'), sys.executable)
+    print('FFmpeg, Remotion и Reel Studio MCP готовы.', flush=True)
     if args.voicebox:
         install_voicebox(manifest['voicebox'], system)
     if args.demo:
