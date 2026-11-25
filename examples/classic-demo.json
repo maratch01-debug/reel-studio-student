@@ -1,5 +1,5 @@
 {
-  "id": "classic-pizza",
+  "id": "classic-pizza-v2",
   "format": "classic",
   "character": "tigress",
   "scenes": [
@@ -105,14 +105,23 @@
           "text": "Пока я горячий."
         }
       ],
-      "art": "classic-demo/speaking.png"
+      "art": "classic-demo/phone.png",
+      "artCuts": [
+        {
+          "at": 2.34,
+          "art": "classic-demo/speaking.png"
+        },
+        {
+          "at": 4.16,
+          "art": "classic-demo/hot.png"
+        }
+      ]
     },
     {
       "say": "Делаешь такого героя в нейросети и снимаешь с ним пробный ролик.",
       "audio": "classic-demo/narration-05.wav",
       "classic": {
-        "kind": "illustration",
-        "label": "ПРОБНЫЙ РОЛИК"
+        "kind": "illustration"
       },
       "cues": [
         {
@@ -136,7 +145,19 @@
           "text": "Пробный ролик."
         }
       ],
-      "art": "classic-demo/phone.png"
+      "art": "classic-demo/slice.png",
+      "artCuts": [
+        {
+          "at": 1.54,
+          "art": "classic-demo/editor.png",
+          "label": "ГЕРОЙ В НЕЙРОСЕТИ"
+        },
+        {
+          "at": 3.0,
+          "art": "classic-demo/camera.png",
+          "label": "ПРОБНЫЙ РОЛИК"
+        }
+      ]
     },
     {
       "say": "Отправляешь ролик местной пиццерии. Показываешь настоящую пиццу, добавляешь адрес и акцию.",
@@ -167,7 +188,19 @@
           "text": "Добавляешь адрес и акцию."
         }
       ],
-      "art": "classic-demo/shop.png"
+      "art": "classic-demo/shop.png",
+      "artCuts": [
+        {
+          "at": 2.04,
+          "art": "classic-demo/pizzaBox.png",
+          "label": "НАСТОЯЩАЯ ПИЦЦА"
+        },
+        {
+          "at": 4.34,
+          "art": "classic-demo/location.png",
+          "label": "АДРЕС И АКЦИЯ"
+        }
+      ]
     },
     {
       "say": "Три пиццерии по двадцать тысяч за пакет. Это шестьдесят тысяч выручки.",
@@ -200,7 +233,7 @@
       "say": "У куска пиццы появилась работа. Знал про такую схему? Пиши да или нет.",
       "audio": "classic-demo/narration-08.wav",
       "classic": {
-        "kind": "poll"
+        "kind": "illustration"
       },
       "cues": [
         {
@@ -222,6 +255,13 @@
           "start": 3.4,
           "end": 4.537,
           "text": "Пиши да или нет."
+        }
+      ],
+      "art": "classic-demo/paid.png",
+      "artCuts": [
+        {
+          "at": 1.92,
+          "art": "classic-demo/poll.png"
         }
       ]
     },
@@ -253,7 +293,14 @@
           "text": "Чтобы не потерять."
         }
       ],
-      "art": "classic-demo/save.png"
+      "art": "classic-demo/camera.png",
+      "artCuts": [
+        {
+          "at": 2.24,
+          "art": "classic-demo/save.png",
+          "label": "СОХРАНИ ИДЕЮ"
+        }
+      ]
     }
   ]
 }

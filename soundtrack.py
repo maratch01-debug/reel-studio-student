@@ -51,6 +51,6 @@ def master_audio(source, music, volume, output, *, duck=True):
         )
         mix += ',' + target
     samples = round(duration * 48000)
-    mix += f',aresample=48000,apad,atrim=end_sample={samples}[a]'
+    mix += f',aresample=48000,apad,atrim=end_sample={samples},asetpts=N/SR/TB[a]'
     ffmpeg(*inputs, '-filter_complex', mix, '-map', '0:v:0', '-map', '[a]',
            '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', output)

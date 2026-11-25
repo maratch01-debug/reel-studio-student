@@ -44,7 +44,7 @@ function Visual({scene, frame, speaking}) {
   }} />;
 }
 
-function Scene({scene, captionStyle, dip}) {
+function Scene({scene, captionStyle, dip, timelineFrame}) {
   const frame = useCurrentFrame();
   const accent = captionStyle === 'accent';
   const cue = scene.cues?.find(({fromFrame, toFrame}) => frame >= fromFrame && frame < toFrame);
@@ -54,7 +54,7 @@ function Scene({scene, captionStyle, dip}) {
   return (
     <AbsoluteFill style={{backgroundColor: scene.layout === 'classic' ? 'transparent' : '#000'}}>
       {scene.layout ?
-        <Layout scene={scene} frame={frame} speaking={speaking} caption={caption} /> :
+        <Layout scene={scene} frame={frame} timelineFrame={timelineFrame} speaking={speaking} caption={caption} /> :
         <Visual scene={scene} frame={frame} speaking={speaking} />}
       {scene.voice && <Html5Audio src={staticFile(scene.voice)} />}
       {scene.sound && (
@@ -114,13 +114,14 @@ function TalkCaption({text}) {
 }
 
 function Reel({scenes, music, musicVolume = 0.12, captionStyle, transition}) {
+  const timelineFrame = useCurrentFrame();
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
       {scenes.some(scene => scene.layout === 'classic') && <ClassicSmoke />}
       <Series>
         {scenes.map((scene, index) => (
           <Series.Sequence key={index} durationInFrames={scene.frames}>
-            <Scene scene={scene} captionStyle={captionStyle} dip={index > 0 && transition === 'dip'} />
+            <Scene scene={scene} captionStyle={captionStyle} timelineFrame={timelineFrame} dip={index > 0 && transition === 'dip'} />
           </Series.Sequence>
         ))}
       </Series>

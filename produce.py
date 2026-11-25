@@ -10,7 +10,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from provision import CAST, cast_profile, speak
-from studio import FORMATS_2D, ROOT, STUDENT_FORMATS, classic_beat, ffmpeg, install_remotion, media_info, render, request
+from studio import FORMATS_2D, ROOT, STUDENT_FORMATS, classic_art_cuts, classic_beat, ffmpeg, install_remotion, media_info, render, request
 
 VOICEBOX = 'http://127.0.0.1:17493'
 CHARACTERS = {'panther': 'Ono_Anna', 'tigress': 'Vivian', 'wolf': 'Ryan'}
@@ -79,12 +79,12 @@ def stage_media(source, target, name, stem):
     return stage(media, target / f'{stem}{media.suffix.lower()}')
 
 
-def build_picture(scene, source, folder, number, comfy, layout):
+def build_picture(scene, source, folder, stem, comfy, layout):
     if scene.get('art'):
-        return stage_media(source, folder, scene['art'], f'art-{number:02}')
+        return stage_media(source, folder, scene['art'], stem)
     if not scene.get('imagePrompt'):
         return None
-    picture = folder / f'art-{number:02}.png'
+    picture = folder / f'{stem}.png'
     if not picture.exists():
         width, height = ('768', '1344') if layout == 'talk' else ('832', '624')
         command = [sys.executable, str(ROOT / 'media_tools.py'), 'image', str(picture),
@@ -106,7 +106,7 @@ def build_visual(scene, layout, source, folder, number, comfy, poses):
         return {'kind': 'video', 'media': media}
     picture = (stage_media(source, folder, scene['portrait'], f'portrait-{number:02}')
                if layout == 'talk' and scene.get('portrait')
-               else build_picture(scene, source, folder, number, comfy, layout))
+               else build_picture(scene, source, folder, f'art-{number:02}', comfy, layout))
     if layout in FORMATS_2D:
         visual = {'kind': 'sprite', 'layout': layout, 'media': poses[0], 'mouths': poses[1:]}
         if picture:
@@ -114,6 +114,13 @@ def build_visual(scene, layout, source, folder, number, comfy, poses):
         for key in ('diagram', 'heading', 'gesture', 'panel', 'classic'):
             if key in scene:
                 visual[key] = scene[key]
+        if layout == 'classic' and scene.get('artCuts'):
+            visual['artCuts'] = [
+                {'at': cut['at'], 'art': build_picture(
+                    cut, source, folder, f'art-{number:02}-cut-{index:02}', comfy, layout),
+                 **({'label': cut['label']} if 'label' in cut else {})}
+                for index, cut in enumerate(classic_art_cuts(scene), 1)
+            ]
         return visual
     if layout == 'talk':
         return {'kind': 'ltx', 'media': picture, 'prompt': scene['prompt'],
@@ -126,6 +133,9 @@ def validate_scene(scene, layout, comfy):
         raise ValueError('В каждой сцене нужен непустой текст say.')
     if layout == 'classic':
         classic_beat(scene)
+        cuts = classic_art_cuts(scene)
+        if comfy is None and any(not cut.get('art') for cut in cuts):
+            raise ValueError('Для imagePrompt в artCuts укажите --comfy или готовые иллюстрации art.')
     if layout in GRAPHIC_FORMATS:
         graphic = scene.get('graphic', {})
         if not isinstance(graphic, dict) or not isinstance(graphic.get('items', []), list):

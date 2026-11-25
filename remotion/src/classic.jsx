@@ -74,6 +74,16 @@ function Poll() {
   </svg>;
 }
 
+function Illustration({art, label}) {
+  return <div style={{display: 'grid', justifyItems: 'center'}}>
+    <Img src={staticFile(art)} style={{width: 760, height: 429, objectFit: 'contain'}} />
+    {label && <div style={{
+      ...letters, fontSize: 37, padding: '8px 24px', borderRadius: 16,
+      color: red, background: '#fffdf8', border: '2px solid #ded8c7',
+    }}>{label}</div>}
+  </div>;
+}
+
 function ClassicVisual({scene, frame}) {
   const beat = scene.classic;
   const revealAt = Math.round((beat.revealAt ?? 0.13) * 30);
@@ -100,35 +110,38 @@ function ClassicVisual({scene, frame}) {
       }}>{step}</div>;
     })}
   </div>;
-  return <div style={{display: 'grid', justifyItems: 'center'}}>
-    <Img src={staticFile(scene.art)} style={{width: 760, height: 429, objectFit: 'contain'}} />
-    {beat.label && <div style={{
-      ...letters, fontSize: 37, padding: '8px 24px', borderRadius: 16,
-      color: red, background: '#fffdf8', border: '2px solid #ded8c7',
-    }}>{beat.label}</div>}
-  </div>;
+  return <Illustration art={scene.art} label={beat.label} />;
 }
 
-export function Classic({scene, frame, caption, speaking}) {
+export function Classic({scene, frame, timelineFrame, caption, speaking}) {
   const opening = scene.classic.kind === 'hero';
   const mouth = scene.mouthFrames?.[frame];
   const pose = scene.mouthFrames
     ? (mouth ? scene.mouths[Math.min(mouth, scene.mouths.length) - 1] : scene.src)
     : (speaking ? scene.mouths[Math.floor(frame / 3) % scene.mouths.length] : scene.src);
-  const entry = interpolate(frame, [0, 7], [.91, 1], {...clamp, easing: Easing.out(Easing.cubic)});
+  const cut = scene.artCuts?.findLast(item => item.atFrame <= frame);
+  const artFrame = frame - (cut?.atFrame ?? 0);
+  const entry = interpolate(artFrame, [0, 5], [.95, 1], {...clamp, easing: Easing.out(Easing.cubic)});
   const height = opening ? 670 * interpolate(frame, [0, 6], [.93, 1], clamp) : 435;
+  const time = timelineFrame / 30;
+  const voiceLevel = [-2, -1, 0, 1, 2].reduce(
+    (sum, offset) => sum + (scene.mouthFrames?.[frame + offset] ?? 0), 0) / 10;
+  const x = Math.sin(time * 2.3) * 12;
+  const y = Math.sin(time * 3.1) * 11 - voiceLevel * 7;
+  const nod = Math.sin(time * 2.6) * 2.3 + Math.sin(time * 4.2) * voiceLevel;
+  const portraitMotion = scene.lockHead ? undefined : `translate(${x}px, ${y}px) rotate(${nod}deg)`;
   const text = caption?.toLocaleUpperCase('ru-RU');
   return <AbsoluteFill>
     {!opening && <div style={{
       position: 'absolute', top: 410, left: 0, width: 1080, height: 665,
       display: 'grid', placeItems: 'center',
-      transform: `translateY(${Math.sin(frame * .06) * 6}px) scale(${entry})`,
+      transform: `translateY(${Math.sin(time * 1.8) * 6}px) scale(${entry})`,
     }}>
-      <ClassicVisual scene={scene} frame={frame} />
+      {cut ? <Illustration art={cut.art} label={cut.label} /> : <ClassicVisual scene={scene} frame={frame} />}
     </div>}
     <Img src={staticFile(pose)} style={{
       position: 'absolute', left: (1080 - height) / 2, top: (opening ? 880 : 1430) - height / 2,
-      width: height, height, objectFit: 'contain',
+      width: height, height, objectFit: 'contain', transform: portraitMotion, transformOrigin: '50% 58%',
     }} />
     {text && <div style={{
       ...letters, position: 'absolute', top: 212, left: 52, right: 52,

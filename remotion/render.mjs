@@ -33,6 +33,13 @@ const browserExecutable = process.env.REEL_BROWSER_EXECUTABLE || findInstalledBr
 const composition = await selectComposition({
   serveUrl, inputProps, id: 'Reel', browserExecutable,
 });
+const classicEncoding = inputProps.scenes.some(scene => scene.layout === 'classic') ? {
+  gopSize: 30,
+  encodingMaxRate: '3800k',
+  encodingBufferSize: '4800k',
+  x264Preset: 'fast',
+  ffmpegOverride: ({args}) => [...args.slice(0, -1), '-bf', '0', args.at(-1)],
+} : {};
 await renderMedia({
   serveUrl,
   composition,
@@ -44,4 +51,5 @@ await renderMedia({
   outputLocation: resolve(output),
   concurrency: 2,
   disallowParallelEncoding: true,
+  ...classicEncoding,
 });

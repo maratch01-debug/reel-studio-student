@@ -267,6 +267,40 @@ def classic_beat(scene):
     return beat
 
 
+def classic_art_cuts(scene, frames=None):
+    cuts = scene.get('artCuts', [])
+    if not isinstance(cuts, list):
+        raise ValueError('artCuts должен быть списком смен иллюстрации.')
+    if cuts and scene['classic']['kind'] == 'hero':
+        raise ValueError('Смены artCuts добавляются после вступления hero.')
+    previous = 0
+    for cut in cuts:
+        if not isinstance(cut, dict) or not any(
+                isinstance(cut.get(key), str) and cut[key].strip() for key in ('art', 'imagePrompt')):
+            raise ValueError('В каждой смене artCuts нужен art или imagePrompt.')
+        frame = frame_number(cut.get('at', 0))
+        if frame <= previous or (frames is not None and frame >= frames):
+            raise ValueError('Времена artCuts должны идти по порядку внутри сцены.')
+        label = cut.get('label', '')
+        if not isinstance(label, str) or len(label) > 46:
+            raise ValueError('Подпись artCuts.label должна быть строкой до 46 символов.')
+        previous = frame
+    return cuts
+
+
+def stage_classic_cuts(project, scene, public, index, frames):
+    result = []
+    for number, cut in enumerate(classic_art_cuts(scene, frames)):
+        if not cut.get('art'):
+            raise ValueError('В project.json каждая смена artCuts требует готового файла art.')
+        result.append({
+            'atFrame': frame_number(cut['at']),
+            'art': stage_image(project, cut['art'], public / f'art{index}_cut{number}.png'),
+            'label': cut.get('label'),
+        })
+    return result
+
+
 def stage_graphic_or_sprite(project, scene, kind, public, index, voice, frames):
     result = {'kind': kind, 'frames': frames}
     if voice:
@@ -299,6 +333,8 @@ def stage_graphic_or_sprite(project, scene, kind, public, index, voice, frames):
                 result['classic'] = classic_beat(scene)
                 if result['classic']['kind'] == 'illustration' and not scene.get('art'):
                     raise ValueError('В project.json для classic illustration нужен готовый файл art.')
+                if 'artCuts' in scene:
+                    result['artCuts'] = stage_classic_cuts(project, scene, public, index, frames)
             if scene.get('diagram'):
                 result['diagram'] = scene['diagram']
             if scene.get('art'):
@@ -414,6 +450,7 @@ def init_project(project, template):
     for scene in spec['scenes']:
         references.extend(scene.get(field) for field in ('media', 'voice', 'art', 'sound'))
         references.extend(scene.get('mouths', []))
+        references.extend(cut['art'] for cut in scene.get('artCuts', []))
     project.parent.mkdir(parents=True, exist_ok=True)
     for name in dict.fromkeys(name for name in references if name):
         relative = Path(name)

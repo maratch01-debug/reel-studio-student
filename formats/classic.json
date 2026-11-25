@@ -130,7 +130,17 @@
           "text": "Пока я горячий."
         }
       ],
-      "art": "examples/classic-demo/speaking.png"
+      "art": "examples/classic-demo/phone.png",
+      "artCuts": [
+        {
+          "at": 2.34,
+          "art": "examples/classic-demo/speaking.png"
+        },
+        {
+          "at": 4.16,
+          "art": "examples/classic-demo/hot.png"
+        }
+      ]
     },
     {
       "kind": "sprite",
@@ -142,8 +152,7 @@
       ],
       "voice": "examples/classic-demo/narration-05.wav",
       "classic": {
-        "kind": "illustration",
-        "label": "ПРОБНЫЙ РОЛИК"
+        "kind": "illustration"
       },
       "cues": [
         {
@@ -167,7 +176,19 @@
           "text": "Пробный ролик."
         }
       ],
-      "art": "examples/classic-demo/phone.png"
+      "art": "examples/classic-demo/slice.png",
+      "artCuts": [
+        {
+          "at": 1.54,
+          "art": "examples/classic-demo/editor.png",
+          "label": "ГЕРОЙ В НЕЙРОСЕТИ"
+        },
+        {
+          "at": 3.0,
+          "art": "examples/classic-demo/camera.png",
+          "label": "ПРОБНЫЙ РОЛИК"
+        }
+      ]
     },
     {
       "kind": "sprite",
@@ -204,7 +225,19 @@
           "text": "Добавляешь адрес и акцию."
         }
       ],
-      "art": "examples/classic-demo/shop.png"
+      "art": "examples/classic-demo/shop.png",
+      "artCuts": [
+        {
+          "at": 2.04,
+          "art": "examples/classic-demo/pizzaBox.png",
+          "label": "НАСТОЯЩАЯ ПИЦЦА"
+        },
+        {
+          "at": 4.34,
+          "art": "examples/classic-demo/location.png",
+          "label": "АДРЕС И АКЦИЯ"
+        }
+      ]
     },
     {
       "kind": "sprite",
@@ -249,7 +282,7 @@
       ],
       "voice": "examples/classic-demo/narration-08.wav",
       "classic": {
-        "kind": "poll"
+        "kind": "illustration"
       },
       "cues": [
         {
@@ -271,6 +304,13 @@
           "start": 3.4,
           "end": 4.537,
           "text": "Пиши да или нет."
+        }
+      ],
+      "art": "examples/classic-demo/paid.png",
+      "artCuts": [
+        {
+          "at": 1.92,
+          "art": "examples/classic-demo/poll.png"
         }
       ]
     },
@@ -308,7 +348,14 @@
           "text": "Чтобы не потерять."
         }
       ],
-      "art": "examples/classic-demo/save.png"
+      "art": "examples/classic-demo/camera.png",
+      "artCuts": [
+        {
+          "at": 2.24,
+          "art": "examples/classic-demo/save.png",
+          "label": "СОХРАНИ ИДЕЮ"
+        }
+      ]
     }
   ]
 }
