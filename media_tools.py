@@ -102,13 +102,18 @@ def captions(args, output):
     result = []
     for segment in segments:
         words = segment.words or []
-        for start in range(0, len(words), args.words):
-            group = words[start:start + args.words]
-            result.append({'start': round(group[0].start, 3), 'end': round(group[-1].end, 3),
-                           'text': ''.join(word.word for word in group).strip()})
+        if args.format == 'pronin':
+            result.extend({'word': word.word.strip(), 'start': round(word.start, 3),
+                           'end': round(word.end, 3)} for word in words if word.word.strip())
+        else:
+            for start in range(0, len(words), args.words):
+                group = words[start:start + args.words]
+                result.append({'start': round(group[0].start, 3), 'end': round(group[-1].end, 3),
+                               'text': ''.join(word.word for word in group).strip()})
     if not result:
         raise ValueError('Whisper не нашёл речь с таймингами в этом файле.')
-    output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    document = {'words': result} if args.format == 'pronin' else result
+    output.write_text(json.dumps(document, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
 
 def smooth(args, output, work):
@@ -186,6 +191,7 @@ def main():
     words.add_argument('--language', default='ru')
     words.add_argument('--model', choices=['tiny', 'base', 'small', 'medium'], default='small')
     words.add_argument('--words', type=int, choices=range(1, 7), default=3)
+    words.add_argument('--format', choices=['reel-studio', 'pronin'], default='reel-studio')
     motion = commands.add_parser('smooth')
     motion.add_argument('input', type=Path)
     motion.add_argument('output', type=Path)
