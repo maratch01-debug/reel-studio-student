@@ -16,7 +16,7 @@ const workspaceFile = z.string().min(1).describe('Путь к файлу вну�
 const comfyFolder = z.string().min(1).optional().describe('Папка локального ComfyUI для Flux или LTX.');
 const reelId = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
 const server = new McpServer({name: 'reel-studio', version: '1.0.0'}, {
-  instructions: 'Работай в локальной папке Reel Studio. Для нового ролика прочитай AGENTS.md и TOOLS.txt, подготовь brief.json, собери ролик и верни MP4 вместе с project.json. Озвучка через Voicebox и анимация через ComfyUI используют локальные сервисы.',
+  instructions: 'Работай в локальной папке Reel Studio. Для нового ролика прочитай AGENTS.md и TOOLS.txt, подготовь brief.json, используй голос выбранного персонажа по умолчанию, собери ролик и верни готовый MP4 вместе с project.json. Озвучка через Voicebox и анимация через ComfyUI используют локальные сервисы.',
 });
 
 function inside(path) {
