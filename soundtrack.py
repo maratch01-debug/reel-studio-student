@@ -5,7 +5,7 @@ import subprocess
 from studio import ffmpeg, media_info
 
 
-def master_audio(source, music, volume, output):
+def master_audio(source, music, volume, output, *, duck=True):
     print('Сведение звука: FFmpeg', flush=True)
     inputs = ['-i', source]
     streams = media_info(source)['streams']
@@ -22,14 +22,15 @@ def master_audio(source, music, volume, output):
         music_input = 1 if has_audio else 2
         inputs += ['-stream_loop', '-1', '-i', music]
         tail = min(0.42, duration / 3)
-        mix = (
-            speech + ',asplit=2[voice][key];'
-            f'[{music_input}:a:0]aformat=sample_rates=48000:channel_layouts=stereo,'
-            f'volume={volume},atrim=0:{duration},'
-            f'afade=t=out:st={duration-tail}:d={tail}[bed];'
-            '[bed][key]sidechaincompress=threshold=0.045:ratio=2.8:attack=14:release=240[ducked];'
-            '[voice][ducked]amix=inputs=2:duration=first:normalize=0'
-        )
+        bed = (f'[{music_input}:a:0]aformat=sample_rates=48000:channel_layouts=stereo,'
+               f'volume={volume},atrim=0:{duration},afade=t=out:st={duration-tail}:d={tail}[bed];')
+        if duck:
+            speech += ',asplit=2[voice][key];'
+            bed += '[bed][key]sidechaincompress=threshold=0.045:ratio=2.8:attack=14:release=240[ducked];'
+        else:
+            speech += '[voice];'
+        music_label = 'ducked' if duck else 'bed'
+        mix = speech + bed + f'[voice][{music_label}]amix=inputs=2:duration=first:normalize=0'
     else:
         mix = speech
     mix += f',atrim=0:{duration}'

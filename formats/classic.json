@@ -1,0 +1,314 @@
+{
+  "music": "assets/classic/bed.m4a",
+  "musicVolume": 0.75,
+  "audioMix": "classic",
+  "transition": "cut",
+  "scenes": [
+    {
+      "kind": "sprite",
+      "layout": "classic",
+      "media": "characters/tigress/idle.png",
+      "mouths": [
+        "characters/tigress/mouth-small.png",
+        "characters/tigress/mouth-open.png"
+      ],
+      "voice": "examples/classic-demo/narration-01.wav",
+      "classic": {
+        "kind": "hero"
+      },
+      "cues": [
+        {
+          "start": 0,
+          "end": 0.88,
+          "text": "Грязные, но"
+        },
+        {
+          "start": 0.88,
+          "end": 1.92,
+          "text": "Законные способы"
+        },
+        {
+          "start": 1.92,
+          "end": 2.5,
+          "text": "Заработать."
+        }
+      ]
+    },
+    {
+      "kind": "sprite",
+      "layout": "classic",
+      "media": "characters/tigress/idle.png",
+      "mouths": [
+        "characters/tigress/mouth-small.png",
+        "characters/tigress/mouth-open.png"
+      ],
+      "voice": "examples/classic-demo/narration-02.wav",
+      "classic": {
+        "kind": "compare",
+        "before": "3 000 ₽",
+        "after": "60 000 ₽",
+        "revealAt": 0.58
+      },
+      "cues": [
+        {
+          "start": 0,
+          "end": 0.58,
+          "text": "Из 3 000 ₽"
+        },
+        {
+          "start": 0.58,
+          "end": 1.562,
+          "text": "В 60 000 ₽"
+        }
+      ],
+      "sound": "assets/classic/coin.mp3",
+      "soundAt": 0.06,
+      "soundVolume": 0.08
+    },
+    {
+      "kind": "sprite",
+      "layout": "classic",
+      "media": "characters/tigress/idle.png",
+      "mouths": [
+        "characters/tigress/mouth-small.png",
+        "characters/tigress/mouth-open.png"
+      ],
+      "voice": "examples/classic-demo/narration-03.wav",
+      "classic": {
+        "kind": "illustration"
+      },
+      "cues": [
+        {
+          "start": 0,
+          "end": 0.74,
+          "text": "Заставь пиццу"
+        },
+        {
+          "start": 0.74,
+          "end": 1.558,
+          "text": "Продавать пиццу."
+        }
+      ],
+      "art": "examples/classic-demo/slice.png"
+    },
+    {
+      "kind": "sprite",
+      "layout": "classic",
+      "media": "characters/tigress/idle.png",
+      "mouths": [
+        "characters/tigress/mouth-small.png",
+        "characters/tigress/mouth-open.png"
+      ],
+      "voice": "examples/classic-demo/narration-04.wav",
+      "classic": {
+        "kind": "illustration"
+      },
+      "cues": [
+        {
+          "start": 0,
+          "end": 0.8,
+          "text": "Представь."
+        },
+        {
+          "start": 0.8,
+          "end": 2.34,
+          "text": "В ленте кусок пепперони"
+        },
+        {
+          "start": 2.34,
+          "end": 3.06,
+          "text": "Говорит"
+        },
+        {
+          "start": 3.06,
+          "end": 4.16,
+          "text": "Съешь меня,"
+        },
+        {
+          "start": 4.16,
+          "end": 5.303,
+          "text": "Пока я горячий."
+        }
+      ],
+      "art": "examples/classic-demo/speaking.png"
+    },
+    {
+      "kind": "sprite",
+      "layout": "classic",
+      "media": "characters/tigress/idle.png",
+      "mouths": [
+        "characters/tigress/mouth-small.png",
+        "characters/tigress/mouth-open.png"
+      ],
+      "voice": "examples/classic-demo/narration-05.wav",
+      "classic": {
+        "kind": "illustration",
+        "label": "ПРОБНЫЙ РОЛИК"
+      },
+      "cues": [
+        {
+          "start": 0,
+          "end": 1.54,
+          "text": "Делаешь такого героя"
+        },
+        {
+          "start": 1.54,
+          "end": 3.0,
+          "text": "В нейросети"
+        },
+        {
+          "start": 3.0,
+          "end": 3.78,
+          "text": "Снимаешь с ним"
+        },
+        {
+          "start": 3.78,
+          "end": 4.79,
+          "text": "Пробный ролик."
+        }
+      ],
+      "art": "examples/classic-demo/phone.png"
+    },
+    {
+      "kind": "sprite",
+      "layout": "classic",
+      "media": "characters/tigress/idle.png",
+      "mouths": [
+        "characters/tigress/mouth-small.png",
+        "characters/tigress/mouth-open.png"
+      ],
+      "voice": "examples/classic-demo/narration-06.wav",
+      "classic": {
+        "kind": "illustration",
+        "label": "РЕКЛАМА ДЛЯ ПИЦЦЕРИИ"
+      },
+      "cues": [
+        {
+          "start": 0,
+          "end": 0.98,
+          "text": "Отправляешь ролик"
+        },
+        {
+          "start": 0.98,
+          "end": 2.04,
+          "text": "Местной пиццерии."
+        },
+        {
+          "start": 2.04,
+          "end": 4.34,
+          "text": "Показываешь настоящую пиццу"
+        },
+        {
+          "start": 4.34,
+          "end": 5.545,
+          "text": "Добавляешь адрес и акцию."
+        }
+      ],
+      "art": "examples/classic-demo/shop.png"
+    },
+    {
+      "kind": "sprite",
+      "layout": "classic",
+      "media": "characters/tigress/idle.png",
+      "mouths": [
+        "characters/tigress/mouth-small.png",
+        "characters/tigress/mouth-open.png"
+      ],
+      "voice": "examples/classic-demo/narration-07.wav",
+      "classic": {
+        "kind": "total",
+        "formula": "3 × 20 000 ₽",
+        "value": "60 000 ₽",
+        "revealAt": 2.16
+      },
+      "cues": [
+        {
+          "start": 0,
+          "end": 0.66,
+          "text": "Три пиццерии"
+        },
+        {
+          "start": 0.66,
+          "end": 2.16,
+          "text": "По 20 000 ₽ за пакет."
+        },
+        {
+          "start": 2.16,
+          "end": 4.02,
+          "text": "60 000 ₽ выручки."
+        }
+      ]
+    },
+    {
+      "kind": "sprite",
+      "layout": "classic",
+      "media": "characters/tigress/idle.png",
+      "mouths": [
+        "characters/tigress/mouth-small.png",
+        "characters/tigress/mouth-open.png"
+      ],
+      "voice": "examples/classic-demo/narration-08.wav",
+      "classic": {
+        "kind": "poll"
+      },
+      "cues": [
+        {
+          "start": 0,
+          "end": 0.88,
+          "text": "У куска пиццы"
+        },
+        {
+          "start": 0.88,
+          "end": 1.92,
+          "text": "Появилась работа."
+        },
+        {
+          "start": 1.92,
+          "end": 3.4,
+          "text": "Знал про такую схему?"
+        },
+        {
+          "start": 3.4,
+          "end": 4.537,
+          "text": "Пиши да или нет."
+        }
+      ]
+    },
+    {
+      "kind": "sprite",
+      "layout": "classic",
+      "media": "characters/tigress/idle.png",
+      "mouths": [
+        "characters/tigress/mouth-small.png",
+        "characters/tigress/mouth-open.png"
+      ],
+      "voice": "examples/classic-demo/narration-09.wav",
+      "classic": {
+        "kind": "illustration"
+      },
+      "cues": [
+        {
+          "start": 0,
+          "end": 0.94,
+          "text": "Начни с одного"
+        },
+        {
+          "start": 0.94,
+          "end": 2.24,
+          "text": "Пробного ролика."
+        },
+        {
+          "start": 2.24,
+          "end": 3.36,
+          "text": "Сохрани идею,"
+        },
+        {
+          "start": 3.36,
+          "end": 4.335,
+          "text": "Чтобы не потерять."
+        }
+      ],
+      "art": "examples/classic-demo/save.png"
+    }
+  ]
+}

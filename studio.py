@@ -18,8 +18,8 @@ from ltx import workflow
 
 ROOT = Path(__file__).resolve().parent
 REMOTION = ROOT / 'remotion'
-FORMATS_2D = ('white-background', 'comic', 'cartoon-story')
-STUDENT_FORMATS = ('white-background', 'comic', 'talk')
+FORMATS_2D = ('classic', 'white-background', 'comic', 'cartoon-story')
+STUDENT_FORMATS = ('classic', 'white-background', 'comic', 'talk')
 DEMO_MEDIA = ROOT / 'examples' / 'first-reel'
 
 
@@ -101,13 +101,18 @@ def captions_file(path, captions):
     path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
 
 
+def remotion_installed():
+    return all((REMOTION / 'node_modules' / '@remotion' / package / 'package.json').is_file()
+               for package in ('renderer', 'fonts'))
+
+
 def check_remotion():
     if not shutil.which('node'):
         raise RuntimeError('Для Remotion установите Node.js 22+ по инструкции SETUP.txt.')
     version = subprocess.check_output(['node', '--version'], text=True).strip()
     if int(version.lstrip('v').split('.')[0]) < 22:
         raise RuntimeError(f'Установлен Node.js {version}. Для Remotion требуется версия 22 или новее.')
-    if not (REMOTION / 'node_modules' / '@remotion' / 'renderer' / 'package.json').is_file():
+    if not remotion_installed():
         raise RuntimeError('Установите Remotion командой npm ci --prefix remotion из папки проекта.')
 
 
@@ -228,7 +233,37 @@ def scene_overlays(project, scene, public, index, frames):
     if scene.get('sound'):
         result['sound'] = stage_audio(media_path(project, scene['sound']), public / f'sound{index}.m4a')
         result['soundFrom'] = frame_number(scene.get('soundAt', 0))
+        volume = float(scene.get('soundVolume', 0.45))
+        if not 0 <= volume <= 1:
+            raise ValueError('soundVolume должен быть числом от 0 до 1.')
+        result['soundVolume'] = volume
     return result
+
+
+def classic_beat(scene):
+    beat = scene.get('classic')
+    if not isinstance(beat, dict) or beat.get('kind') not in {
+            'hero', 'illustration', 'compare', 'total', 'steps', 'poll'}:
+        raise ValueError('Для classic укажите classic.kind: hero, illustration, compare, total, steps или poll.')
+    kind = beat['kind']
+    limits = {'label': 46, 'before': 12, 'after': 12, 'value': 12, 'formula': 34}
+    required = {'compare': ('before', 'after'), 'total': ('value',)}.get(kind, ())
+    for key, maximum in limits.items():
+        if key in required or key in beat:
+            value = beat.get(key)
+            if not isinstance(value, str) or not 1 <= len(value.strip()) <= maximum:
+                raise ValueError(f'В classic.{key} нужна строка до {maximum} символов.')
+    if kind == 'illustration' and not (scene.get('art') or scene.get('imagePrompt')):
+        raise ValueError('Для classic illustration нужно art или imagePrompt.')
+    if kind == 'steps':
+        diagram = scene.get('diagram', {})
+        steps = diagram.get('steps') if isinstance(diagram, dict) else None
+        if not isinstance(steps, list) or not 1 <= len(steps) <= 3 or not all(
+                isinstance(step, str) and 1 <= len(step.strip()) <= 45 for step in steps):
+            raise ValueError('Для classic steps нужны от одного до трёх коротких diagram.steps.')
+    if 'revealAt' in beat:
+        frame_number(beat['revealAt'])
+    return beat
 
 
 def stage_graphic_or_sprite(project, scene, kind, public, index, voice, frames):
@@ -259,6 +294,10 @@ def stage_graphic_or_sprite(project, scene, kind, public, index, voice, frames):
             result.update(layout=scene['layout'], panel=scene.get('panel', index + 1),
                           heading=scene.get('heading'), gesture=scene.get('gesture', 'idle'),
                           lockHead=scene.get('lockHead') is True)
+            if scene['layout'] == 'classic':
+                result['classic'] = classic_beat(scene)
+                if result['classic']['kind'] == 'illustration' and not scene.get('art'):
+                    raise ValueError('В project.json для classic illustration нужен готовый файл art.')
             if scene.get('diagram'):
                 result['diagram'] = scene['diagram']
             if scene.get('art'):
@@ -279,8 +318,8 @@ def render(project, output, comfy, url, renderer='remotion'):
         check_remotion()
     music = media_path(project, spec['music']) if spec.get('music') else None
     audio_mix = spec.get('audioMix', 'legacy')
-    if audio_mix not in {'legacy', 'dialogue'}:
-        raise ValueError('audioMix должен быть legacy или dialogue.')
+    if audio_mix not in {'legacy', 'dialogue', 'classic'}:
+        raise ValueError('audioMix должен быть legacy, dialogue или classic.')
     render_music = music if audio_mix == 'legacy' else None
     music_volume = float(spec.get('musicVolume', 0.12))
     if not 0 <= music_volume <= 1:
@@ -290,6 +329,11 @@ def render(project, output, comfy, url, renderer='remotion'):
         work = Path(directory)
         public = work / 'media'
         public.mkdir()
+        if any(scene.get('layout') == 'classic' for scene in scenes):
+            for source, name in (('smoke-puff.png', 'smoke.png'),
+                                 ('neucha-cyrillic.woff2', 'neucha-cyrillic.woff2'),
+                                 ('neucha-latin.woff2', 'neucha-latin.woff2')):
+                shutil.copyfile(ROOT / 'assets' / 'classic' / source, public / f'classic-{name}')
         montage = []
         for index, scene in enumerate(scenes):
             kind = scene.get('kind', 'video')
@@ -351,10 +395,10 @@ def render(project, output, comfy, url, renderer='remotion'):
         else:
             export_ffmpeg(work, public, montage, render_music, music_volume)
         result = work / 'result.mp4'
-        if audio_mix == 'dialogue':
+        if audio_mix != 'legacy':
             from soundtrack import master_audio
             mastered = work / 'mastered.mp4'
-            master_audio(result, music, music_volume, mastered)
+            master_audio(result, music, music_volume, mastered, duck=audio_mix == 'dialogue')
             result = mastered
         os.replace(result, output)
     print(output)
@@ -396,7 +440,7 @@ def install_remotion():
     for executable in ('node', 'ffmpeg', 'ffprobe'):
         if not shutil.which(executable):
             raise RuntimeError(f'Не найден {executable}. Установите зависимости по SETUP.txt.')
-    if not (REMOTION / 'node_modules' / '@remotion' / 'renderer' / 'package.json').is_file():
+    if not remotion_installed():
         npm = shutil.which('npm.cmd' if os.name == 'nt' else 'npm')
         if not npm:
             raise RuntimeError('Не найден npm. Установите Node.js с npm по SETUP.txt.')
@@ -426,7 +470,7 @@ def main():
     init.add_argument('project', type=Path)
     init.add_argument('--format', choices=STUDENT_FORMATS,
                       default='white-background')
-    start = commands.add_parser('quickstart', help='Собрать учебные примеры трёх форматов')
+    start = commands.add_parser('quickstart', help='Собрать учебные примеры')
     start.add_argument('--format', choices=['all', *STUDENT_FORMATS], default='all')
     start.add_argument('--output-dir', type=Path, default=ROOT / '2d-output')
     make = commands.add_parser('produce', help='Собрать один ролик или пачку по плану агента')

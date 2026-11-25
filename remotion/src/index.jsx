@@ -14,6 +14,7 @@ import {
 } from 'remotion';
 import {Badge, Graphic} from './graphics.jsx';
 import {TwoDimensional} from './two-dimensional.jsx';
+import {Classic, ClassicSmoke} from './classic.jsx';
 
 function Sprite({scene, frame, speaking}) {
   const mouth = scene.mouthFrames?.[frame];
@@ -49,15 +50,16 @@ function Scene({scene, captionStyle, dip}) {
   const cue = scene.cues?.find(({fromFrame, toFrame}) => frame >= fromFrame && frame < toFrame);
   const caption = scene.cues?.length ? cue?.text : scene.caption;
   const speaking = scene.cues?.length ? Boolean(cue) : frame < (scene.voiceFrames || 0);
+  const Layout = scene.layout === 'classic' ? Classic : TwoDimensional;
   return (
-    <AbsoluteFill style={{backgroundColor: '#000'}}>
+    <AbsoluteFill style={{backgroundColor: scene.layout === 'classic' ? 'transparent' : '#000'}}>
       {scene.layout ?
-        <TwoDimensional scene={scene} frame={frame} speaking={speaking} caption={caption} /> :
+        <Layout scene={scene} frame={frame} speaking={speaking} caption={caption} /> :
         <Visual scene={scene} frame={frame} speaking={speaking} />}
       {scene.voice && <Html5Audio src={staticFile(scene.voice)} />}
       {scene.sound && (
         <Sequence from={scene.soundFrom} layout="none">
-          <Html5Audio src={staticFile(scene.sound)} volume={0.45} />
+          <Html5Audio src={staticFile(scene.sound)} volume={scene.soundVolume ?? 0.45} />
         </Sequence>
       )}
       {scene.badge && <Badge badge={scene.badge} />}
@@ -114,6 +116,7 @@ function TalkCaption({text}) {
 function Reel({scenes, music, musicVolume = 0.12, captionStyle, transition}) {
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
+      {scenes.some(scene => scene.layout === 'classic') && <ClassicSmoke />}
       <Series>
         {scenes.map((scene, index) => (
           <Series.Sequence key={index} durationInFrames={scene.frames}>

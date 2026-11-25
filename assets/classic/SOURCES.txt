@@ -1,0 +1,4 @@
+bed.m4a и coin.mp3 — дорожка и денежный акцент из материалов классических роликов Енота, выпуск 21.11.2026, предоставленных владельцем проекта.
+smoke-puff.png — фоновая дымка из того же проекта.
+Neucha, Jovanny Lemonad. Лицензия SIL OFL 1.1 включена в OFL.txt.
+https://github.com/google/fonts/tree/main/ofl/neucha

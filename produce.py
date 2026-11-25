@@ -1,5 +1,6 @@
 """Build one or more short reels from a plan written by the coding agent."""
 import json
+import math
 import re
 import shutil
 import subprocess
@@ -9,7 +10,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from provision import CAST, cast_profile, speak
-from studio import FORMATS_2D, ROOT, STUDENT_FORMATS, ffmpeg, install_remotion, media_info, render, request
+from studio import FORMATS_2D, ROOT, STUDENT_FORMATS, classic_beat, ffmpeg, install_remotion, media_info, render, request
 
 VOICEBOX = 'http://127.0.0.1:17493'
 CHARACTERS = {'panther': 'Ono_Anna', 'tigress': 'Vivian', 'wolf': 'Ryan'}
@@ -110,7 +111,7 @@ def build_visual(scene, layout, source, folder, number, comfy, poses):
         visual = {'kind': 'sprite', 'layout': layout, 'media': poses[0], 'mouths': poses[1:]}
         if picture:
             visual['art'] = picture
-        for key in ('diagram', 'heading', 'gesture', 'panel'):
+        for key in ('diagram', 'heading', 'gesture', 'panel', 'classic'):
             if key in scene:
                 visual[key] = scene[key]
         return visual
@@ -123,6 +124,8 @@ def build_visual(scene, layout, source, folder, number, comfy, poses):
 def validate_scene(scene, layout, comfy):
     if not isinstance(scene, dict) or not isinstance(scene.get('say'), str) or not scene['say'].strip():
         raise ValueError('В каждой сцене нужен непустой текст say.')
+    if layout == 'classic':
+        classic_beat(scene)
     if layout in GRAPHIC_FORMATS:
         graphic = scene.get('graphic', {})
         if not isinstance(graphic, dict) or not isinstance(graphic.get('items', []), list):
@@ -146,6 +149,20 @@ def validate_scene(scene, layout, comfy):
 def stage_character(character, source, folder, prefix=''):
     sprites = ROOT / 'characters' / character if character in CHARACTERS else source / character
     return [stage(sprites / name, folder / (prefix + name)) for name in POSES]
+
+
+def arrange_classic_voice(source, target, tempo):
+    if not math.isfinite(tempo) or not 0.85 <= tempo <= 1.40:
+        raise ValueError('voiceTempo должен быть числом от 0.85 до 1.40.')
+    trim = ('silenceremove=start_periods=1:start_duration=0.025:'
+            'start_threshold=-43dB:start_silence=0.04')
+    with tempfile.TemporaryDirectory(dir=target.parent) as folder:
+        staged = Path(folder) / target.name
+        pauses = ('silenceremove=stop_periods=-1:stop_duration=0.24:'
+                  'stop_threshold=-43dB:stop_silence=0.14')
+        ffmpeg('-i', source, '-vn', '-af',
+               f'{trim},areverse,{trim},areverse,{pauses},atempo={tempo},apad=pad_dur=0.08', staged)
+        staged.replace(target)
 
 
 def build_reel(brief, source, folder, comfy):
@@ -182,17 +199,19 @@ def build_reel(brief, source, folder, comfy):
     elif layout in FORMATS_2D:
         cast[character] = stage_character(character, source, folder)
     selected_voices = {}
-    soundtrack = brief.get('music', 'pulse')
-    mix = brief.get('audioMix', 'dialogue')
+    classic = layout == 'classic'
+    soundtrack = brief.get('music', 'classic' if classic else 'pulse')
+    mix = brief.get('audioMix', 'classic' if classic else 'dialogue')
+    mix_volumes = {'classic': 0.75, 'dialogue': 0.72, 'legacy': 0.22}
     project = {'scenes': [], 'audioMix': mix, 'musicVolume': brief.get(
-        'musicVolume', 0.72 if mix == 'dialogue' else 0.22)}
+        'musicVolume', mix_volumes.get(mix, 0.22))}
     if layout == 'talk':
         project['captionStyle'] = 'talk'
     for key in ('framing', 'transition', 'captionStyle'):
         if key in brief:
             project[key] = brief[key]
     if soundtrack:
-        bundled_music = {'pulse': 'pulse-bed.m4a', 'studio': 'studio-bed.m4a'}
+        bundled_music = {'pulse': 'pulse-bed.m4a', 'studio': 'studio-bed.m4a', 'classic': 'classic/bed.m4a'}
         song = (ROOT / 'assets' / bundled_music[soundtrack]
                 if soundtrack in bundled_music else source / soundtrack)
         project['music'] = stage(song, folder / f'music{song.suffix.lower()}')
@@ -224,8 +243,16 @@ def build_reel(brief, source, folder, comfy):
                 if key not in selected_voices:
                     selected_voices[key] = pick_voice(voice, actor, language)
                 profile, engine = selected_voices[key]
-                speak(SimpleNamespace(output=audio, profile=profile, engine=engine,
-                                      language=language, text=spoken, instruct=voice.get('instruct')), VOICEBOX)
+                timed = 'cues' in scene or 'captionsFile' in scene
+                cut_voice = classic and not timed
+                raw = audio.with_name(f'voice-{number:02}-source.wav') if cut_voice else audio
+                if not raw.exists():
+                    speak(SimpleNamespace(output=raw, profile=profile, engine=engine,
+                                          language=language, text=spoken, instruct=voice.get('instruct')), VOICEBOX)
+                if cut_voice:
+                    default_tempo = 1.18 if number <= 3 else 1.10
+                    tempo = float(scene.get('voiceTempo', brief.get('voiceTempo', default_tempo)))
+                    arrange_classic_voice(raw, audio, tempo)
         length = float(media_info(audio)['format']['duration'])
         if length <= 0:
             raise ValueError(f'Пустая озвучка сцены {number}.')
@@ -246,12 +273,15 @@ def build_reel(brief, source, folder, comfy):
                 next_scene[key] = scene[key]
         for field in ('sound', 'sticker'):
             if scene.get(field):
-                if field == 'sound' and scene[field] == 'point':
-                    next_scene[field] = stage(ROOT / 'assets/point.m4a', folder / 'point.m4a')
+                bundled = {'point': 'point.m4a', 'classic-coin': 'classic/coin.mp3'}
+                if field == 'sound' and scene[field] in bundled:
+                    file = ROOT / 'assets' / bundled[scene[field]]
+                    next_scene[field] = stage(file, folder / file.name)
                 else:
                     next_scene[field] = stage_media(source, folder, scene[field], f'{field}-{number:02}')
-        if 'soundAt' in scene:
-            next_scene['soundAt'] = scene['soundAt']
+        for key in ('soundAt', 'soundVolume'):
+            if key in scene:
+                next_scene[key] = scene[key]
         project['scenes'].append(next_scene)
     spec = folder / 'project.json'
     spec.write_text(json.dumps(project, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

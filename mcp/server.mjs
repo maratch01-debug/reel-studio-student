@@ -10,7 +10,7 @@ const root = await realpath(fileURLToPath(new URL('..', import.meta.url)));
 if (process.env.REEL_STUDIO_TOOL_PATH) {
   process.env.PATH = [process.env.REEL_STUDIO_TOOL_PATH, process.env.PATH].filter(Boolean).join(delimiter);
 }
-const formats = ['white-background', 'comic', 'talk'];
+const formats = ['classic', 'white-background', 'comic', 'talk'];
 const characters = ['panther', 'tigress', 'wolf'];
 const workspaceFile = z.string().min(1).describe('Путь к файлу внутри папки Reel Studio.');
 const comfyFolder = z.string().min(1).optional().describe('Папка локального ComfyUI для Flux или LTX.');
@@ -114,13 +114,14 @@ async function serviceUp(url) {
 tool('reel_studio_catalog', 'Показывает форматы, голоса и примеры Reel Studio.', {}, async () => ({
   workspace: root,
   formats: [
+    {id: 'classic', label: 'Классика', example: 'examples/classic-demo.json'},
     {id: 'white-background', label: 'Белый фон'},
     {id: 'comic', label: 'Комикс'},
     {id: 'talk', label: 'Живой герой', animation: 'Локальный ComfyUI с LTX или готовый клип'},
   ],
   voices: characters.map(id => ({id, sample: `assets/voices/${id}-reference.wav`})),
   music: 'assets/pulse-bed.m4a',
-  briefExample: 'examples/student-demo.json',
+  briefExample: 'examples/classic-demo.json',
   guide: 'TOOLS.txt',
 }), true);
 
@@ -138,7 +139,7 @@ tool('reel_studio_doctor', 'Проверяет FFmpeg, Remotion, Voicebox и Com
   };
 }, true);
 
-tool('reel_studio_demo', 'Собирает комплектные демо с Пантерой. Возвращает MP4 и монтажные проекты.', {
+tool('reel_studio_demo', 'Собирает комплектные демо Reel Studio. Возвращает MP4 и монтажные проекты.', {
   format: z.enum(['all', ...formats]).default('all'),
 }, async ({format}, signal) => {
   const output = dirname(await workspacePath('output/mcp-demos/index.json', '.json'));

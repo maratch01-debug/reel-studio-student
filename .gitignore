@@ -18,3 +18,5 @@ output/
 !assets/voices/*-reference.wav
 /.mcp.json
 /.codex/config.toml
+!assets/classic/bed.m4a
+!examples/classic-demo/narration-*.wav
