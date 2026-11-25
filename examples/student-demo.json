@@ -1,92 +1,261 @@
 {
   "reels": [
     {
-      "id": "first-white-background",
-      "format": "white-background",
-      "character": "panther",
+      "id": "classic-pizza",
+      "format": "classic",
+      "character": "tigress",
       "scenes": [
         {
-          "say": "С виду кусок резины. А за что тут платят?",
-          "audio": "first-reel/assets/narration-cut-01.wav",
-          "art": "first-reel/assets/panther-studio.png",
-          "cues": [
-            {
-              "start": 0.0,
-              "end": 1.522,
-              "text": "С виду кусок резины."
-            },
-            {
-              "start": 1.531,
-              "end": 3.08,
-              "text": "А за что тут платят?"
-            }
-          ],
-          "sound": "point",
-          "soundAt": 0.05
-        },
-        {
-          "say": "Не за коврик. За то, что он садится в машину как родной.",
-          "audio": "first-reel/assets/narration-cut-02.wav",
-          "diagram": {
-            "value": "Точная посадка",
-            "label": "Под конкретную машину",
-            "color": "amber"
+          "say": "Грязные, но законные способы заработать.",
+          "audio": "classic-demo/narration-01.wav",
+          "classic": {
+            "kind": "hero"
           },
           "cues": [
             {
-              "start": 0.0,
-              "end": 1.788,
-              "text": "Не за коврик."
+              "start": 0,
+              "end": 0.88,
+              "text": "Грязные, но"
             },
             {
-              "start": 1.805,
-              "end": 3.221,
-              "text": "Садится в машину"
+              "start": 0.88,
+              "end": 1.92,
+              "text": "Законные способы"
             },
             {
-              "start": 3.221,
-              "end": 4.363,
-              "text": "Как родной."
-            }
-          ],
-          "sound": "point",
-          "soundAt": 0.05
-        },
-        {
-          "say": "Снимаешь форму, вырезаешь коврик, проверяешь посадку.",
-          "audio": "first-reel/assets/narration-cut-03.wav",
-          "diagram": {
-            "steps": [
-              "Снять форму",
-              "Вырезать коврик",
-              "Проверить посадку"
-            ],
-            "color": "amber"
-          },
-          "cues": [
-            {
-              "start": 0.0,
-              "end": 3.425,
-              "text": "Три действия"
+              "start": 1.92,
+              "end": 2.5,
+              "text": "Заработать."
             }
           ]
         },
         {
-          "say": "Для первой продажи хватит одного образца. Примерь его прямо в машине клиента.",
-          "audio": "first-reel/assets/narration-cut-04.wav",
-          "art": "first-reel/assets/panther-workbench.png",
+          "say": "Из трёх тысяч в шестьдесят.",
+          "audio": "classic-demo/narration-02.wav",
+          "classic": {
+            "kind": "compare",
+            "before": "3 000 ₽",
+            "after": "60 000 ₽",
+            "revealAt": 0.58
+          },
           "cues": [
             {
-              "start": 0.0,
-              "end": 2.743,
-              "text": "Хватит одного образца."
+              "start": 0,
+              "end": 0.58,
+              "text": "Из 3 000 ₽"
             },
             {
-              "start": 2.832,
-              "end": 4.973,
-              "text": "Примерь в машине клиента."
+              "start": 0.58,
+              "end": 1.562,
+              "text": "В 60 000 ₽"
+            }
+          ],
+          "sound": "classic-coin",
+          "soundAt": 0.06,
+          "soundVolume": 0.08
+        },
+        {
+          "say": "Заставь пиццу продавать пиццу.",
+          "audio": "classic-demo/narration-03.wav",
+          "classic": {
+            "kind": "illustration"
+          },
+          "cues": [
+            {
+              "start": 0,
+              "end": 0.74,
+              "text": "Заставь пиццу"
+            },
+            {
+              "start": 0.74,
+              "end": 1.558,
+              "text": "Продавать пиццу."
+            }
+          ],
+          "art": "classic-demo/slice.png"
+        },
+        {
+          "say": "Представь. В ленте кусок пепперони говорит: съешь меня, пока я горячий.",
+          "audio": "classic-demo/narration-04.wav",
+          "classic": {
+            "kind": "illustration"
+          },
+          "cues": [
+            {
+              "start": 0,
+              "end": 0.8,
+              "text": "Представь."
+            },
+            {
+              "start": 0.8,
+              "end": 2.34,
+              "text": "В ленте кусок пепперони"
+            },
+            {
+              "start": 2.34,
+              "end": 3.06,
+              "text": "Говорит"
+            },
+            {
+              "start": 3.06,
+              "end": 4.16,
+              "text": "Съешь меня,"
+            },
+            {
+              "start": 4.16,
+              "end": 5.303,
+              "text": "Пока я горячий."
+            }
+          ],
+          "art": "classic-demo/speaking.png"
+        },
+        {
+          "say": "Делаешь такого героя в нейросети и снимаешь с ним пробный ролик.",
+          "audio": "classic-demo/narration-05.wav",
+          "classic": {
+            "kind": "illustration",
+            "label": "ПРОБНЫЙ РОЛИК"
+          },
+          "cues": [
+            {
+              "start": 0,
+              "end": 1.54,
+              "text": "Делаешь такого героя"
+            },
+            {
+              "start": 1.54,
+              "end": 3.0,
+              "text": "В нейросети"
+            },
+            {
+              "start": 3.0,
+              "end": 3.78,
+              "text": "Снимаешь с ним"
+            },
+            {
+              "start": 3.78,
+              "end": 4.79,
+              "text": "Пробный ролик."
+            }
+          ],
+          "art": "classic-demo/phone.png"
+        },
+        {
+          "say": "Отправляешь ролик местной пиццерии. Показываешь настоящую пиццу, добавляешь адрес и акцию.",
+          "audio": "classic-demo/narration-06.wav",
+          "classic": {
+            "kind": "illustration",
+            "label": "РЕКЛАМА ДЛЯ ПИЦЦЕРИИ"
+          },
+          "cues": [
+            {
+              "start": 0,
+              "end": 0.98,
+              "text": "Отправляешь ролик"
+            },
+            {
+              "start": 0.98,
+              "end": 2.04,
+              "text": "Местной пиццерии."
+            },
+            {
+              "start": 2.04,
+              "end": 4.34,
+              "text": "Показываешь настоящую пиццу"
+            },
+            {
+              "start": 4.34,
+              "end": 5.545,
+              "text": "Добавляешь адрес и акцию."
+            }
+          ],
+          "art": "classic-demo/shop.png"
+        },
+        {
+          "say": "Три пиццерии по двадцать тысяч за пакет. Это шестьдесят тысяч выручки.",
+          "audio": "classic-demo/narration-07.wav",
+          "classic": {
+            "kind": "total",
+            "formula": "3 × 20 000 ₽",
+            "value": "60 000 ₽",
+            "revealAt": 2.16
+          },
+          "cues": [
+            {
+              "start": 0,
+              "end": 0.66,
+              "text": "Три пиццерии"
+            },
+            {
+              "start": 0.66,
+              "end": 2.16,
+              "text": "По 20 000 ₽ за пакет."
+            },
+            {
+              "start": 2.16,
+              "end": 4.02,
+              "text": "60 000 ₽ выручки."
             }
           ]
+        },
+        {
+          "say": "У куска пиццы появилась работа. Знал про такую схему? Пиши да или нет.",
+          "audio": "classic-demo/narration-08.wav",
+          "classic": {
+            "kind": "poll"
+          },
+          "cues": [
+            {
+              "start": 0,
+              "end": 0.88,
+              "text": "У куска пиццы"
+            },
+            {
+              "start": 0.88,
+              "end": 1.92,
+              "text": "Появилась работа."
+            },
+            {
+              "start": 1.92,
+              "end": 3.4,
+              "text": "Знал про такую схему?"
+            },
+            {
+              "start": 3.4,
+              "end": 4.537,
+              "text": "Пиши да или нет."
+            }
+          ]
+        },
+        {
+          "say": "Начни с одного пробного ролика. Сохрани идею, чтобы не потерять.",
+          "audio": "classic-demo/narration-09.wav",
+          "classic": {
+            "kind": "illustration"
+          },
+          "cues": [
+            {
+              "start": 0,
+              "end": 0.94,
+              "text": "Начни с одного"
+            },
+            {
+              "start": 0.94,
+              "end": 2.24,
+              "text": "Пробного ролика."
+            },
+            {
+              "start": 2.24,
+              "end": 3.36,
+              "text": "Сохрани идею,"
+            },
+            {
+              "start": 3.36,
+              "end": 4.335,
+              "text": "Чтобы не потерять."
+            }
+          ],
+          "art": "classic-demo/save.png"
         }
       ]
     },

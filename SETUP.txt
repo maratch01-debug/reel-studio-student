@@ -5,7 +5,7 @@
    Windows: powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Demo
    macOS: sh install.sh --demo
    Скрипты ставят базовые зависимости и локальный Reel Studio MCP,
-   затем собирают по одному учебному ролику в каждом формате. «Классика» собирается первой.
+   затем собирают по одному учебному ролику в каждом из трёх форматов. «Классика» собирается первой.
    Для проверки MCP откройте корень проекта в новом чате. См. MCP.md.
    Для установщика Voicebox добавьте -Voicebox на Windows или --voicebox
    на macOS. Манифест установщиков и ревизий — dependencies.json.

@@ -19,7 +19,8 @@ from ltx import workflow
 ROOT = Path(__file__).resolve().parent
 REMOTION = ROOT / 'remotion'
 FORMATS_2D = ('classic', 'white-background', 'comic', 'cartoon-story')
-STUDENT_FORMATS = ('classic', 'white-background', 'comic', 'talk')
+STUDENT_FORMATS = ('classic', 'comic', 'talk')
+TEMPLATE_FORMATS = (*STUDENT_FORMATS, 'white-background')
 DEMO_MEDIA = ROOT / 'examples' / 'first-reel'
 
 
@@ -468,10 +469,9 @@ def main():
     commands.add_parser('doctor')
     init = commands.add_parser('init')
     init.add_argument('project', type=Path)
-    init.add_argument('--format', choices=STUDENT_FORMATS,
-                      default='white-background')
+    init.add_argument('--format', choices=TEMPLATE_FORMATS, default='classic')
     start = commands.add_parser('quickstart', help='Собрать учебные примеры')
-    start.add_argument('--format', choices=['all', *STUDENT_FORMATS], default='all')
+    start.add_argument('--format', choices=['all', *TEMPLATE_FORMATS], default='all')
     start.add_argument('--output-dir', type=Path, default=ROOT / '2d-output')
     make = commands.add_parser('produce', help='Собрать один ролик или пачку по плану агента')
     make.add_argument('brief', type=Path)
