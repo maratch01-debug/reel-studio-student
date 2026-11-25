@@ -1,11 +1,13 @@
 """Local reel builder for user-owned assets."""
 import argparse
+from array import array
 import json
 import math
 import os
 import platform
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 import uuid
@@ -171,6 +173,28 @@ def stage_audio(source, destination):
     return destination.name
 
 
+def mouth_frames(voice, frames):
+    samples_per_frame = 400
+    pcm = subprocess.check_output([
+        'ffmpeg', '-nostdin', '-hide_banner', '-loglevel', 'error', '-i', str(voice),
+        '-vn', '-ac', '1', '-ar', '12000', '-f', 's16le', '-',
+    ])
+    samples = array('h', pcm)
+    if sys.byteorder != 'little':
+        samples.byteswap()
+    levels = []
+    for start in range(0, min(len(samples), frames * samples_per_frame), samples_per_frame):
+        span = samples[start:start + samples_per_frame]
+        levels.append(math.sqrt(sum(sample * sample for sample in span) / len(span)))
+    if not levels:
+        return []
+    sorted_levels = sorted(levels)
+    voice_level = sorted_levels[int((len(sorted_levels) - 1) * 0.82)]
+    quiet = max(70, voice_level * 0.11)
+    return [0 if level < quiet else 1 if level < voice_level * 0.62 else 2
+            for level in levels]
+
+
 def frame_number(seconds):
     value = float(seconds)
     if not math.isfinite(value) or value < 0:
@@ -212,6 +236,8 @@ def stage_graphic_or_sprite(project, scene, kind, public, index, voice, frames):
     if voice:
         result['voice'] = stage_audio(voice, public / f'voice{index}.m4a')
         result['voiceFrames'] = frame_number(media_info(voice)['format']['duration'])
+        if kind == 'sprite':
+            result['mouthFrames'] = mouth_frames(voice, frames)
     if kind == 'graphic':
         data = scene['graphic']
         if not data.get('title') or len(data.get('items', [])) > 5:
@@ -252,6 +278,10 @@ def render(project, output, comfy, url, renderer='remotion'):
     if renderer == 'remotion':
         check_remotion()
     music = media_path(project, spec['music']) if spec.get('music') else None
+    audio_mix = spec.get('audioMix', 'legacy')
+    if audio_mix not in {'legacy', 'dialogue'}:
+        raise ValueError('audioMix должен быть legacy или dialogue.')
+    render_music = music if audio_mix == 'legacy' else None
     music_volume = float(spec.get('musicVolume', 0.12))
     if not 0 <= music_volume <= 1:
         raise ValueError('musicVolume должен быть числом от 0 до 1.')
@@ -317,10 +347,16 @@ def render(project, output, comfy, url, renderer='remotion'):
                    '-c:a', 'aac', '-ar', 48000, '-ac', 2, public / f'scene{index}.mp4')
             montage.append({'kind': 'video', 'src': f'scene{index}.mp4', 'frames': frames, **overlays})
         if renderer == 'remotion':
-            export_remotion(work, public, montage, music, spec, music_volume)
+            export_remotion(work, public, montage, render_music, spec, music_volume)
         else:
-            export_ffmpeg(work, public, montage, music, music_volume)
-        os.replace(work / 'result.mp4', output)
+            export_ffmpeg(work, public, montage, render_music, music_volume)
+        result = work / 'result.mp4'
+        if audio_mix == 'dialogue':
+            from soundtrack import master_audio
+            mastered = work / 'mastered.mp4'
+            master_audio(result, music, music_volume, mastered)
+            result = mastered
+        os.replace(result, output)
     print(output)
 
 
@@ -331,7 +367,7 @@ def init_project(project, template):
     spec = json.loads(contents)
     references = [spec.get('music')]
     for scene in spec['scenes']:
-        references.extend(scene.get(field) for field in ('media', 'voice', 'art'))
+        references.extend(scene.get(field) for field in ('media', 'voice', 'art', 'sound'))
         references.extend(scene.get('mouths', []))
     project.parent.mkdir(parents=True, exist_ok=True)
     for name in dict.fromkeys(name for name in references if name):

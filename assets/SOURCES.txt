@@ -1,3 +1,10 @@
 studio-bed.m4a — инструментальная музыка, созданная для этого комплекта
 локально через ACE-Step 1.5 Turbo. Seed 11689, 110 BPM, F minor.
 Модель, загрузка и лицензия: https://huggingface.co/ACE-Step/Ace-Step1.5
+
+pulse-bed.m4a — оригинальный инструментал для Reel Studio. 90 BPM,
+минорные клавиши, бас и ударные. Все звуки синтезированы для проекта.
+point.m4a — оригинальный синтезированный музыкальный акцент.
+Записи в voices/ созданы в Qwen3-TTS VoiceDesign на русском из описаний
+тембра. На записи синтетические голоса. Модель Apache 2.0:
+https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign

@@ -6,11 +6,12 @@ import shutil
 import subprocess
 import tempfile
 import time
+import uuid
 from pathlib import Path
 from urllib.parse import quote, urlsplit
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
-from studio import request
+from studio import ROOT, request
 from media_tools import FLUX_UNET, FLUX_ENCODER, FLUX_VAE
 
 HF = 'https://huggingface.co/'
@@ -79,6 +80,47 @@ def models(root, download, entries=MODELS):
         print(f'Установлен: {target.name}', flush=True)
 
 
+
+CAST_TEXT = (
+    'С виду обычный коврик. Но деньги здесь не в резине. '
+    'Клиент платит за точную форму, чтобы коврик сел как родной. Покажу, с чего начать.'
+)
+CAST = {
+    'panther': 'Пантера',
+    'tigress': 'Тигрица',
+    'wolf': 'Волк',
+}
+
+
+def cast_profile(url, actor, profiles):
+    if actor not in CAST:
+        raise ValueError(f'Неизвестный голос «{actor}». Доступны: {", ".join(CAST)}.')
+    label = 'Reel Studio v2 · ' + CAST[actor]
+    profile = next((item for item in profiles if item.get('name') == label), None)
+    if profile is None:
+        profile = request(url, '/profiles', {
+            'name': label, 'language': 'ru', 'voice_type': 'cloned', 'default_engine': 'qwen',
+            'description': 'Оригинальный синтетический голос Reel Studio.',
+        })
+    route = '/profiles/' + quote(profile['id'], safe='') + '/samples'
+    if not request(url, route):
+        name = f'{actor}-reference.wav'
+        reference = (ROOT / 'assets' / 'voices' / name).read_bytes()
+        boundary = uuid.uuid4().hex
+        body = (
+            f'--{boundary}\r\nContent-Disposition: form-data; name="reference_text"\r\n\r\n'
+            f'{CAST_TEXT}\r\n--{boundary}\r\n'
+            f'Content-Disposition: form-data; name="file"; filename="{name}"\r\n'
+            'Content-Type: audio/wav\r\n\r\n'
+        ).encode() + reference + f'\r\n--{boundary}--\r\n'.encode()
+        upload = Request(url + route, body, {
+            'Content-Type': f'multipart/form-data; boundary={boundary}',
+        })
+        with urlopen(upload, timeout=60) as response:
+            json.load(response)
+    return profile['id']
+
+
 def speak(args, url):
     destination = args.output.resolve()
     if destination.suffix.lower() != '.wav' or destination.exists():
@@ -126,7 +168,9 @@ def main():
     weights.add_argument('--set', choices=['video', 'image', 'all'], default='video')
     commands.add_parser('profiles')
     voice = commands.add_parser('speak')
-    voice.add_argument('--profile', required=True)
+    selector = voice.add_mutually_exclusive_group(required=True)
+    selector.add_argument('--profile')
+    selector.add_argument('--cast', choices=CAST)
     voice.add_argument('--text', required=True)
     voice.add_argument('--language', default='ru')
     voice.add_argument('--engine')
@@ -141,14 +185,16 @@ def main():
     parsed = urlsplit(url)
     if parsed.scheme != 'http' or parsed.hostname not in {'localhost', '127.0.0.1', '::1'}:
         raise ValueError('Укажите локальный HTTP-адрес Voicebox.')
-    if args.command == 'profiles':
+    if args.command == 'profiles' or args.cast:
         profiles = request(url, '/profiles')
         if isinstance(profiles, dict):
             profiles = profiles['profiles']
-        print(json.dumps([{'id': p['id'], 'name': p.get('name')} for p in profiles],
-                         ensure_ascii=False, indent=2))
-    else:
-        speak(args, url)
+        if args.command == 'profiles':
+            print(json.dumps([{'id': p['id'], 'name': p.get('name')} for p in profiles],
+                             ensure_ascii=False, indent=2))
+            return
+        args.profile = cast_profile(url, args.cast, profiles)
+    speak(args, url)
 
 
 if __name__ == '__main__':

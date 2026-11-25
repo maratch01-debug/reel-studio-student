@@ -48,7 +48,10 @@ function Panel({scene, frame}) {
 
 function Speaker({scene, frame, speaking, style, animated = false}) {
   const poses = [scene.src, ...scene.mouths, scene.mouths[0]];
-  const pose = speaking ? poses[Math.floor(frame / 3) % poses.length] : scene.src;
+  const mouth = scene.mouthFrames?.[frame];
+  const pose = scene.mouthFrames
+    ? (mouth ? scene.mouths[Math.min(mouth, scene.mouths.length) - 1] : scene.src)
+    : (speaking ? poses[Math.floor(frame / 3) % poses.length] : scene.src);
   const entrance = spring({frame, fps: 30, config: {damping: 18, stiffness: 120}});
   const rise = (1 - entrance) * (animated ? 106 : 18);
   const bob = Math.sin(frame / 8) * (animated ? 9 : 4);

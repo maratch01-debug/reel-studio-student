@@ -13,3 +13,6 @@ output/
 !examples/first-reel/assets/narration-*.wav
 !examples/first-reel/assets/scene-*.mp4
 !assets/studio-bed.m4a
+!assets/pulse-bed.m4a
+!assets/point.m4a
+!assets/voices/*-reference.wav

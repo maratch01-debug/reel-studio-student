@@ -1,6 +1,5 @@
 import {existsSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
-import {homedir} from 'node:os';
 import {join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {bundle} from '@remotion/bundler';
@@ -27,12 +26,6 @@ function findInstalledBrowser() {
       join(location, 'Microsoft', 'Edge', 'Application', 'msedge.exe'),
     ]).find(existsSync);
   }
-  if (process.platform === 'darwin') {
-    return ['/Applications', join(homedir(), 'Applications')].flatMap((location) => [
-      join(location, 'Google Chrome.app', 'Contents', 'MacOS', 'Google Chrome'),
-      join(location, 'Microsoft Edge.app', 'Contents', 'MacOS', 'Microsoft Edge'),
-    ]).find(existsSync);
-  }
   return undefined;
 }
 
@@ -50,4 +43,5 @@ await renderMedia({
   pixelFormat: 'yuv420p',
   outputLocation: resolve(output),
   concurrency: 2,
+  disallowParallelEncoding: true,
 });

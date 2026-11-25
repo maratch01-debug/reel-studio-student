@@ -4,70 +4,87 @@
       "id": "first-white-background",
       "format": "white-background",
       "character": "panther",
-      "musicVolume": 0.17,
       "scenes": [
         {
-          "say": "Бизнесы, которые не выглядят прибыльными, но приносят кучу денег. Эва-коврики для машин.",
-          "audio": "first-reel/assets/narration-studio.wav",
+          "say": "С виду кусок резины. А за что тут платят?",
+          "audio": "first-reel/assets/narration-cut-01.wav",
+          "art": "first-reel/assets/panther-studio.png",
+          "cues": [
+            {
+              "start": 0.0,
+              "end": 1.522,
+              "text": "С виду кусок резины."
+            },
+            {
+              "start": 1.531,
+              "end": 3.08,
+              "text": "А за что тут платят?"
+            }
+          ],
+          "sound": "point",
+          "soundAt": 0.05
+        },
+        {
+          "say": "Не за коврик. За то, что он садится в машину как родной.",
+          "audio": "first-reel/assets/narration-cut-02.wav",
           "diagram": {
-            "value": "ЭВА-коврики",
+            "value": "Точная посадка",
             "label": "Под конкретную машину",
             "color": "amber"
           },
           "cues": [
             {
-              "start": 0,
-              "end": 1.32,
-              "text": "Бизнесы, которые"
+              "start": 0.0,
+              "end": 1.788,
+              "text": "Не за коврик."
             },
             {
-              "start": 1.32,
-              "end": 3.14,
-              "text": "не выглядят прибыльными,"
+              "start": 1.805,
+              "end": 3.221,
+              "text": "Садится в машину"
             },
             {
-              "start": 3.14,
-              "end": 4.6,
-              "text": "но приносят кучу денег."
-            },
-            {
-              "start": 4.6,
-              "end": 6.84,
-              "text": "ЭВА-коврики для машин."
+              "start": 3.221,
+              "end": 4.363,
+              "text": "Как родной."
             }
-          ]
+          ],
+          "sound": "point",
+          "soundAt": 0.05
         },
         {
-          "say": "В гараже вырезаешь коврик по лекалу. А в машине ячейки удерживают воду с обуви.",
-          "audio": "first-reel/assets/narration-workbench.wav",
+          "say": "Снимаешь форму, вырезаешь коврик, проверяешь посадку.",
+          "audio": "first-reel/assets/narration-cut-03.wav",
           "diagram": {
             "steps": [
               "Снять форму",
-              "Вырезать по лекалу",
+              "Вырезать коврик",
               "Проверить посадку"
             ],
             "color": "amber"
           },
           "cues": [
             {
-              "start": 0,
-              "end": 0.64,
-              "text": "В гараже"
+              "start": 0.0,
+              "end": 3.425,
+              "text": "Три действия"
+            }
+          ]
+        },
+        {
+          "say": "Для первой продажи хватит одного образца. Примерь его прямо в машине клиента.",
+          "audio": "first-reel/assets/narration-cut-04.wav",
+          "art": "first-reel/assets/panther-workbench.png",
+          "cues": [
+            {
+              "start": 0.0,
+              "end": 2.743,
+              "text": "Хватит одного образца."
             },
             {
-              "start": 0.64,
-              "end": 3.0,
-              "text": "вырезаешь коврик по лекалу."
-            },
-            {
-              "start": 3.0,
-              "end": 4.28,
-              "text": "А в машине ячейки"
-            },
-            {
-              "start": 4.28,
-              "end": 6.25,
-              "text": "удерживают воду с обуви."
+              "start": 2.832,
+              "end": 4.973,
+              "text": "Примерь в машине клиента."
             }
           ]
         }
@@ -77,63 +94,93 @@
       "id": "first-comic",
       "format": "comic",
       "character": "panther",
-      "musicVolume": 0.17,
       "scenes": [
         {
-          "say": "Бизнесы, которые не выглядят прибыльными, но приносят кучу денег. Эва-коврики для машин.",
-          "audio": "first-reel/assets/narration-studio.wav",
+          "say": "С виду кусок резины. А за что тут платят?",
+          "audio": "first-reel/assets/narration-cut-01.wav",
           "art": "first-reel/assets/panther-studio.png",
-          "panel": 1,
           "cues": [
             {
-              "start": 0,
-              "end": 1.32,
-              "text": "Бизнесы, которые"
+              "start": 0.0,
+              "end": 1.522,
+              "text": "С виду кусок резины."
             },
             {
-              "start": 1.32,
-              "end": 3.14,
-              "text": "не выглядят прибыльными,"
-            },
-            {
-              "start": 3.14,
-              "end": 4.6,
-              "text": "но приносят кучу денег."
-            },
-            {
-              "start": 4.6,
-              "end": 6.84,
-              "text": "ЭВА-коврики для машин."
+              "start": 1.531,
+              "end": 3.08,
+              "text": "А за что тут платят?"
             }
-          ]
+          ],
+          "sound": "point",
+          "soundAt": 0.05,
+          "panel": 1
         },
         {
-          "say": "В гараже вырезаешь коврик по лекалу. А в машине ячейки удерживают воду с обуви.",
-          "audio": "first-reel/assets/narration-workbench.wav",
-          "art": "first-reel/assets/panther-workbench.png",
-          "panel": 2,
+          "say": "Не за коврик. За то, что он садится в машину как родной.",
+          "audio": "first-reel/assets/narration-cut-02.wav",
+          "diagram": {
+            "value": "Точная посадка",
+            "label": "Под конкретную машину",
+            "color": "amber"
+          },
           "cues": [
             {
-              "start": 0,
-              "end": 0.64,
-              "text": "В гараже"
+              "start": 0.0,
+              "end": 1.788,
+              "text": "Не за коврик."
             },
             {
-              "start": 0.64,
-              "end": 3.0,
-              "text": "вырезаешь коврик по лекалу."
+              "start": 1.805,
+              "end": 3.221,
+              "text": "Садится в машину"
             },
             {
-              "start": 3.0,
-              "end": 4.28,
-              "text": "А в машине ячейки"
-            },
-            {
-              "start": 4.28,
-              "end": 6.25,
-              "text": "удерживают воду с обуви."
+              "start": 3.221,
+              "end": 4.363,
+              "text": "Как родной."
             }
-          ]
+          ],
+          "sound": "point",
+          "soundAt": 0.05,
+          "panel": 2
+        },
+        {
+          "say": "Снимаешь форму, вырезаешь коврик, проверяешь посадку.",
+          "audio": "first-reel/assets/narration-cut-03.wav",
+          "diagram": {
+            "steps": [
+              "Снять форму",
+              "Вырезать коврик",
+              "Проверить посадку"
+            ],
+            "color": "amber"
+          },
+          "cues": [
+            {
+              "start": 0.0,
+              "end": 3.425,
+              "text": "Три действия"
+            }
+          ],
+          "panel": 3
+        },
+        {
+          "say": "Для первой продажи хватит одного образца. Примерь его прямо в машине клиента.",
+          "audio": "first-reel/assets/narration-cut-04.wav",
+          "art": "first-reel/assets/panther-workbench.png",
+          "cues": [
+            {
+              "start": 0.0,
+              "end": 2.743,
+              "text": "Хватит одного образца."
+            },
+            {
+              "start": 2.832,
+              "end": 4.973,
+              "text": "Примерь в машине клиента."
+            }
+          ],
+          "panel": 4
         }
       ]
     },
@@ -141,7 +188,6 @@
       "id": "first-talk",
       "format": "talk",
       "character": "panther",
-      "musicVolume": 0.17,
       "scenes": [
         {
           "say": "Бизнесы, которые не выглядят прибыльными, но приносят кучу денег. Эва-коврики для машин.",
@@ -149,23 +195,23 @@
           "video": "first-reel/assets/scene-studio.mp4",
           "cues": [
             {
-              "start": 0,
-              "end": 1.32,
+              "start": 0.0,
+              "end": 1.0,
               "text": "Бизнесы, которые"
             },
             {
-              "start": 1.32,
-              "end": 3.14,
+              "start": 1.0,
+              "end": 2.8333333333333335,
               "text": "не выглядят прибыльными,"
             },
             {
-              "start": 3.14,
-              "end": 4.6,
+              "start": 2.8333333333333335,
+              "end": 4.733333333333333,
               "text": "но приносят кучу денег."
             },
             {
-              "start": 4.6,
-              "end": 6.84,
+              "start": 4.733333333333333,
+              "end": 6.966666666666667,
               "text": "ЭВА-коврики для машин."
             }
           ]
@@ -176,23 +222,23 @@
           "video": "first-reel/assets/scene-workbench.mp4",
           "cues": [
             {
-              "start": 0,
-              "end": 0.64,
+              "start": 0.0,
+              "end": 0.6666666666666666,
               "text": "В гараже"
             },
             {
-              "start": 0.64,
-              "end": 3.0,
+              "start": 0.6666666666666666,
+              "end": 2.533333333333333,
               "text": "вырезаешь коврик по лекалу."
             },
             {
-              "start": 3.0,
-              "end": 4.28,
+              "start": 2.533333333333333,
+              "end": 3.3333333333333335,
               "text": "А в машине ячейки"
             },
             {
-              "start": 4.28,
-              "end": 6.25,
+              "start": 3.3333333333333335,
+              "end": 5.433333333333334,
               "text": "удерживают воду с обуви."
             }
           ]

@@ -8,7 +8,7 @@ import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 
-from provision import speak
+from provision import CAST, cast_profile, speak
 from studio import FORMATS_2D, ROOT, STUDENT_FORMATS, ffmpeg, install_remotion, media_info, render, request
 
 VOICEBOX = 'http://127.0.0.1:17493'
@@ -18,11 +18,12 @@ GRAPHIC_FORMATS = {'explainer': 'cards', 'comparison': 'bars', 'timeline': 'time
 FORMATS = {*FORMATS_2D, *GRAPHIC_FORMATS, 'story', 'demo', 'talk', 'dialog'}
 
 
-def pick_voice(voice, default_preset, language):
+def pick_voice(voice, actor, language):
     profile_name = voice.get('profile')
-    preset = voice.get('preset', default_preset)
-    if not profile_name and not preset:
-        raise ValueError('Укажите имя профиля Voicebox, preset или готовые audio для всех сцен.')
+    preset = voice.get('preset')
+    cast = voice.get('cast') or (actor if actor in CAST else 'panther')
+    if sum(bool(voice.get(key)) for key in ('profile', 'preset', 'cast')) > 1:
+        raise ValueError('В voice выберите одно поле: profile, cast или preset.')
     try:
         profiles = request(VOICEBOX, '/profiles')
     except OSError as error:
@@ -34,6 +35,9 @@ def pick_voice(voice, default_preset, language):
         if len(matches) != 1:
             raise ValueError(f'Нужен один профиль Voicebox с именем или ID «{profile_name}».')
         return matches[0]['id'], voice.get('engine')
+    if not preset and (language == 'ru' or voice.get('cast')):
+        return cast_profile(VOICEBOX, cast, profiles), voice.get('engine', 'qwen')
+    preset = preset or CHARACTERS.get(actor, 'Ono_Anna')
     existing = next((p for p in profiles if p.get('preset_engine') == 'qwen_custom_voice'
                      and str(p.get('preset_voice_id', '')).casefold() == preset.casefold()), None)
     if existing is None:
@@ -178,15 +182,19 @@ def build_reel(brief, source, folder, comfy):
     elif layout in FORMATS_2D:
         cast[character] = stage_character(character, source, folder)
     selected_voices = {}
-    soundtrack = brief.get('music', 'studio')
-    project = {'scenes': [], 'musicVolume': brief.get('musicVolume', 0.22)}
+    soundtrack = brief.get('music', 'pulse')
+    mix = brief.get('audioMix', 'dialogue')
+    project = {'scenes': [], 'audioMix': mix, 'musicVolume': brief.get(
+        'musicVolume', 0.72 if mix == 'dialogue' else 0.22)}
     if layout == 'talk':
         project['captionStyle'] = 'talk'
     for key in ('framing', 'transition', 'captionStyle'):
         if key in brief:
             project[key] = brief[key]
     if soundtrack:
-        song = ROOT / 'assets/studio-bed.m4a' if soundtrack == 'studio' else source / soundtrack
+        bundled_music = {'pulse': 'pulse-bed.m4a', 'studio': 'studio-bed.m4a'}
+        song = (ROOT / 'assets' / bundled_music[soundtrack]
+                if soundtrack in bundled_music else source / soundtrack)
         project['music'] = stage(song, folder / f'music{song.suffix.lower()}')
     for number, scene in enumerate(scenes, 1):
         spoken = scene['say']
@@ -205,12 +213,16 @@ def build_reel(brief, source, folder, comfy):
                     ffmpeg('-i', clip, '-map', '0:a:0', '-vn', extracted)
                     extracted.replace(audio)
             if not audio.exists():
-                voice = {**brief.get('voice', {}), **scene.get('voice', {})}
+                override = scene.get('voice', {})
+                voice = {**brief.get('voice', {}), **override}
+                selectors = ('profile', 'preset', 'cast')
+                if any(field in override for field in selectors):
+                    voice = {field: value for field, value in voice.items()
+                             if field not in selectors or field in override}
                 language = voice.get('language', 'ru')
-                preset = CHARACTERS.get(actor, 'Ono_Anna')
-                key = (voice.get('profile'), voice.get('preset', preset), voice.get('engine'), language)
+                key = (actor, language, *(voice.get(field) for field in (*selectors, 'engine')))
                 if key not in selected_voices:
-                    selected_voices[key] = pick_voice(voice, preset, language)
+                    selected_voices[key] = pick_voice(voice, actor, language)
                 profile, engine = selected_voices[key]
                 speak(SimpleNamespace(output=audio, profile=profile, engine=engine,
                                       language=language, text=spoken, instruct=voice.get('instruct')), VOICEBOX)
@@ -229,8 +241,17 @@ def build_reel(brief, source, folder, comfy):
             next_scene['cues'] = scene.get('cues', [{'start': 0, 'end': length, 'text': caption}])
         if layout in FORMATS_2D:
             next_scene['lockHead'] = brief.get('lockHead', layout == 'white-background')
-        if 'framing' in scene:
-            next_scene['framing'] = scene['framing']
+        for key in ('framing', 'motion', 'badge'):
+            if key in scene:
+                next_scene[key] = scene[key]
+        for field in ('sound', 'sticker'):
+            if scene.get(field):
+                if field == 'sound' and scene[field] == 'point':
+                    next_scene[field] = stage(ROOT / 'assets/point.m4a', folder / 'point.m4a')
+                else:
+                    next_scene[field] = stage_media(source, folder, scene[field], f'{field}-{number:02}')
+        if 'soundAt' in scene:
+            next_scene['soundAt'] = scene['soundAt']
         project['scenes'].append(next_scene)
     spec = folder / 'project.json'
     spec.write_text(json.dumps(project, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

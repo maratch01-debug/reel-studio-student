@@ -16,7 +16,10 @@ import {Badge, Graphic} from './graphics.jsx';
 import {TwoDimensional} from './two-dimensional.jsx';
 
 function Sprite({scene, frame, speaking}) {
-  const image = speaking ? scene.mouths[Math.floor(frame / 3) % scene.mouths.length] : scene.src;
+  const mouth = scene.mouthFrames?.[frame];
+  const image = scene.mouthFrames
+    ? (mouth ? scene.mouths[Math.min(mouth, scene.mouths.length) - 1] : scene.src)
+    : (speaking ? scene.mouths[Math.floor(frame / 3) % scene.mouths.length] : scene.src);
   const offset = Math.sin(frame / 14) * 8;
   return (
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', background: scene.background}}>

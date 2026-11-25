@@ -1,6 +1,7 @@
 {
-  "music": "assets/studio-bed.m4a",
-  "musicVolume": 0.17,
+  "music": "assets/pulse-bed.m4a",
+  "musicVolume": 0.72,
+  "audioMix": "dialogue",
   "transition": "cut",
   "scenes": [
     {
@@ -11,30 +12,23 @@
         "characters/panther/mouth-small.png",
         "characters/panther/mouth-open.png"
       ],
-      "voice": "assets/narration-studio.wav",
+      "voice": "assets/narration-cut-01.wav",
+      "lockHead": false,
+      "art": "assets/panther-studio.png",
       "cues": [
         {
-          "start": 0,
-          "end": 1.32,
-          "text": "Бизнесы, которые"
+          "start": 0.0,
+          "end": 1.522,
+          "text": "С виду кусок резины."
         },
         {
-          "start": 1.32,
-          "end": 3.14,
-          "text": "не выглядят прибыльными,"
-        },
-        {
-          "start": 3.14,
-          "end": 4.6,
-          "text": "но приносят кучу денег."
-        },
-        {
-          "start": 4.6,
-          "end": 6.84,
-          "text": "ЭВА-коврики для машин."
+          "start": 1.531,
+          "end": 3.08,
+          "text": "А за что тут платят?"
         }
       ],
-      "art": "assets/panther-studio.png",
+      "sound": "assets/point.m4a",
+      "soundAt": 0.05,
       "panel": 1
     },
     {
@@ -45,31 +39,85 @@
         "characters/panther/mouth-small.png",
         "characters/panther/mouth-open.png"
       ],
-      "voice": "assets/narration-workbench.wav",
+      "voice": "assets/narration-cut-02.wav",
+      "lockHead": false,
+      "diagram": {
+        "value": "Точная посадка",
+        "label": "Под конкретную машину",
+        "color": "amber"
+      },
       "cues": [
         {
-          "start": 0,
-          "end": 0.64,
-          "text": "В гараже"
+          "start": 0.0,
+          "end": 1.788,
+          "text": "Не за коврик."
         },
         {
-          "start": 0.64,
-          "end": 3.0,
-          "text": "вырезаешь коврик по лекалу."
+          "start": 1.805,
+          "end": 3.221,
+          "text": "Садится в машину"
         },
         {
-          "start": 3.0,
-          "end": 4.28,
-          "text": "А в машине ячейки"
-        },
-        {
-          "start": 4.28,
-          "end": 6.25,
-          "text": "удерживают воду с обуви."
+          "start": 3.221,
+          "end": 4.363,
+          "text": "Как родной."
         }
       ],
-      "art": "assets/panther-workbench.png",
+      "sound": "assets/point.m4a",
+      "soundAt": 0.05,
       "panel": 2
+    },
+    {
+      "kind": "sprite",
+      "layout": "comic",
+      "media": "characters/panther/idle.png",
+      "mouths": [
+        "characters/panther/mouth-small.png",
+        "characters/panther/mouth-open.png"
+      ],
+      "voice": "assets/narration-cut-03.wav",
+      "lockHead": false,
+      "diagram": {
+        "steps": [
+          "Снять форму",
+          "Вырезать коврик",
+          "Проверить посадку"
+        ],
+        "color": "amber"
+      },
+      "cues": [
+        {
+          "start": 0.0,
+          "end": 3.425,
+          "text": "Три действия"
+        }
+      ],
+      "panel": 3
+    },
+    {
+      "kind": "sprite",
+      "layout": "comic",
+      "media": "characters/panther/idle.png",
+      "mouths": [
+        "characters/panther/mouth-small.png",
+        "characters/panther/mouth-open.png"
+      ],
+      "voice": "assets/narration-cut-04.wav",
+      "lockHead": false,
+      "art": "assets/panther-workbench.png",
+      "cues": [
+        {
+          "start": 0.0,
+          "end": 2.743,
+          "text": "Хватит одного образца."
+        },
+        {
+          "start": 2.832,
+          "end": 4.973,
+          "text": "Примерь в машине клиента."
+        }
+      ],
+      "panel": 4
     }
   ]
 }
